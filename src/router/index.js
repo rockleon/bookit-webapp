@@ -12,6 +12,15 @@ const routes = [
       admin: false,
     },
   },
+  {
+      path: "/login",
+      name: "Login",
+      component: () => import("../views/Admin/Login.vue"),
+      meta: {
+        requiresAuth: false,
+        admin: true,
+      },
+    },
   // {
   //   path: "/admin/sessions/:sessionId/edit",
   //   name: "EditSession",
