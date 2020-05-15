@@ -13,14 +13,23 @@ const routes = [
     },
   },
   {
-      path: "/login",
-      name: "Login",
-      component: () => import("../views/Admin/Login.vue"),
-      meta: {
-        requiresAuth: false,
-        admin: true,
-      },
+    path: "/login",
+    name: "Login",
+    component: () => import("../views/Admin/Login.vue"),
+    meta: {
+      requiresAuth: false,
+      admin: true,
     },
+  },
+  {
+    path: "/events",
+    name: "Events",
+    component: () => import("../views/User/EventList.vue"),
+    meta: {
+      requiresAuth: false,
+      admin: true,
+    },
+  },
   // {
   //   path: "/admin/sessions/:sessionId/edit",
   //   name: "EditSession",
@@ -35,7 +44,6 @@ const routes = [
 
 const router = new VueRouter({
   mode: "history",
-  // base: process.env.BASE_URL,
   routes,
 });
 
