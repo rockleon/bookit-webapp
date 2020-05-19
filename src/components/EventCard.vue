@@ -1,18 +1,24 @@
 <template>
-  <v-card class="event-card">
+  <v-card
+    class="event-card"
+    @click="$router.push({name: 'EventDetail', params: {eventId: event.id, event: event}})"
+  >
     <div class="image-div">
       <img :src="require('@/assets/events/concert.jpg')" :alt="event.title" class="event-image" />
     </div>
-    <div class="event-title">{{ event.title }}</div>
-    <div class="event-subtitle">
-      <v-row class="ma-0" style="padding: 5px 0px;">
-        <v-col cols="4" class="pa-0"></v-col>
-        <v-col cols="8" class="pa-0" align="right">{{ event.date }}</v-col>
-      </v-row>
-      <v-row class="ma-0" style="padding: 5px 0px;">
-        <v-col cols="4" class="pa-0"></v-col>
-        <v-col cols="8" class="pa-0" align="right">{{ event.city }}</v-col>
-      </v-row>
+    <div class="event-content">
+      <div class="event-info">
+        <div class="event-title">{{ event.title }}</div>
+        <div class="event-location">{{ event.city }}</div>
+      </div>
+      <div class="event-date">
+        <div class="date">17</div>
+        <div class="month">Sep</div>
+      </div>
+    </div>
+    <div class="floater-count">
+      <v-icon>mdi-eye</v-icon>
+      <span>99</span>
     </div>
   </v-card>
 </template>
@@ -27,43 +33,23 @@ export default {
 <style scoped>
 .event-card {
   width: 100%;
-  height: 370px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .event-card:hover {
+  cursor: pointer;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+
+.event-card:hover .event-image {
+  transform: scale(1.2);
 }
 
 .image-div {
   height: 200px;
   width: 100%;
-  background-color: lavender;
   overflow: hidden;
-}
-
-.event-title {
-  display: flex;
-  width: 100%;
-  height: 170px;
-  padding: 25px;
-  font-size: 20px;
-  color: var(--v-text-base);
-  background-color: var(--v-card1-base);
-}
-
-.event-subtitle {
-  top: 297.4px;
-  z-index: 2;
-  height: 72.6px;
-  width: 100%;
-  padding: 5px 10px;
-  position: absolute;
-  font-size: 14px;
-  color: var(--v-text-lighten1);
-  background-color: var(--v-card2-base);
-  border-top: 1px solid var(--v-card1-darken1);
 }
 
 .event-image {
@@ -73,7 +59,67 @@ export default {
   transition: transform 0.2s;
 }
 
-.event-card:hover .event-image {
-  transform: scale(1.2);
+.event-content {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  padding: 10px;
+  background-color: var(--v-card2-base);
+}
+
+.event-info {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  padding: 5px;
+}
+
+.event-title {
+  display: flex;
+  width: 100%;
+  padding-bottom: 5px;
+  font-size: 20px;
+}
+
+.event-location {
+  width: 100%;
+  font-size: 16px;
+  color: var(--v-text-lighten5);
+}
+
+.event-date {
+  width: 20%;
+  padding: 5px;
+}
+
+.date {
+  font-size: 20px;
+  text-align: center;
+  color: var(--v-error-darken2);
+}
+
+.month {
+  text-align: center;
+  color: var(--v-error-darken2);
+}
+
+.floater-count {
+  display: flex;
+  width: fit-content;
+  padding: 5px 10px;
+  color: white;
+  font-size: 14px;
+  background-color: var(--v-error-darken2);
+  border-radius: 4px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+}
+
+.floater-count .v-icon {
+  color: white;
+  margin-right: 5px;
+  font-size: 16px;
 }
 </style>

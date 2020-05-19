@@ -29,7 +29,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--v-background-base);
   /* background-color: white; */
-  color: #1a1a1a;
+  color: var(--v-text-base);
 }
 
 html {

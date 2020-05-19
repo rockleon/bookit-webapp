@@ -13,18 +13,19 @@ const routes = [
     },
   },
   {
-    path: "/login",
-    name: "Login",
-    component: () => import("../views/Admin/Login.vue"),
+    path: "/events",
+    name: "Events",
+    component: () => import("../views/User/EventList.vue"),
     meta: {
       requiresAuth: false,
       admin: true,
     },
   },
   {
-    path: "/events",
-    name: "Events",
-    component: () => import("../views/User/EventList.vue"),
+    path: "/events/:eventId",
+    name: "EventDetail",
+    props: true,
+    component: () => import("../views/User/EventDetail.vue"),
     meta: {
       requiresAuth: false,
       admin: true,

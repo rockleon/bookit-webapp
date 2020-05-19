@@ -25,7 +25,7 @@ _axios.interceptors.request.use(
 );
 
 // create axios plugin
-Plugin.install = function(Vue, options) {
+Plugin.install = function(Vue) {
   Vue.axios = _axios;
   window.axios = _axios;
   Object.defineProperties(Vue.prototype, {
