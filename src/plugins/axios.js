@@ -4,7 +4,7 @@ import Vue from "vue";
 import axios from "axios";
 
 let config = {
-  baseURL: process.env.VUE_APP_BASE_URL || "",
+  baseURL: process.env.VUE_APP_API_URL || "",
   timeout: 60 * 1000, // Timeout
 };
 
@@ -13,7 +13,7 @@ const _axios = axios.create(config);
 _axios.interceptors.request.use(
   function(config) {
     // Do something before request is sent
-    const token = localStorage.getItem("GSU_TOKEN");
+    const token = localStorage.getItem("BOOKIT_TOKEN");
     if (token && token !== "undefined")
       config.headers["Authorization"] = "Token " + token;
     return config;
