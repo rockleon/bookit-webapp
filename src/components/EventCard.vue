@@ -12,21 +12,33 @@
         <div class="event-location">{{ event.city }}</div>
       </div>
       <div class="event-date">
-        <div class="date">17</div>
-        <div class="month">Sep</div>
+        <div class="date">{{getDate}}</div>
+        <div class="month">{{getMonth}}</div>
       </div>
     </div>
     <div class="floater-count">
       <v-icon>mdi-eye</v-icon>
-      <span>99</span>
+      <span>{{event.views_count}}</span>
     </div>
   </v-card>
 </template>
 
 <script>
+import moment from "moment";
+
 export default {
   name: "EventCard",
-  props: ["event"]
+  props: ["event"],
+  computed: {
+    getDate() {
+      let date = moment(this.event.start_time).format("DD");
+      return date;
+    },
+    getMonth() {
+      let month = moment(this.event.start_time).format("MMMM");
+      return month;
+    }
+  }
 };
 </script>
 

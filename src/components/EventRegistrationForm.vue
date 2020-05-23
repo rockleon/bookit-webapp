@@ -1,5 +1,11 @@
 <template>
-  <v-form ref="registrationForm" v-model="valid" class="registration-form" @submit.prevent>
+  <v-form
+    ref="registrationForm"
+    v-model="valid"
+    lazy-validation
+    class="registration-form"
+    @submit.prevent
+  >
     <v-row class="event-title ma-0">{{title}}</v-row>
     <v-row class="form-row ma-0" style="padding-top: 20px;">
       <v-col cols="6" class="form-col">
@@ -74,13 +80,7 @@
     </v-row>
     <v-row class="form-row ma-0">
       <v-col cols="11">
-        <v-file-input
-          show-size
-          label="ID Card"
-          v-model="card"
-          :rules="[rules.required]"
-          class="pa-0"
-        ></v-file-input>
+        <v-file-input show-size label="ID Card" v-model="card" class="pa-0"></v-file-input>
       </v-col>
     </v-row>
     <v-row class="form-button-row ma-0">
@@ -104,6 +104,8 @@
 </template>
 
 <script>
+import { postAttachment } from "../apis/attachment";
+
 export default {
   name: "EventRegistrationForm",
   props: ["eventId", "title"],
@@ -135,7 +137,7 @@ export default {
         numbersOnly: value =>
           (value && /^[0-9]+$/.test(value)) || "Only numbers are allowed",
         tenDigits: value => (value && value.length === 10) || "10 digits only",
-        greaterThanZero: value => (value && value > 10) || "Invalid value"
+        greaterThanZero: value => (value && value > 0) || "Invalid value"
       }
     };
   },
@@ -151,7 +153,17 @@ export default {
       await this.$refs.registrationForm.validate();
       if (!this.valid) {
         this.sumbitLoading = false;
+        console.log("error");
       } else {
+        const data = new FormData();
+        data.append("document", this.card);
+        postAttachment(data)
+          .then(response => {
+            console.log(response.data);
+          })
+          .catch(error => {
+            console.log(error);
+          });
         this.$emit("closeModal");
         this.sumbitLoading = false;
       }

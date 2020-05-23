@@ -15,7 +15,16 @@
         <div class="info-row">
           <div class="event-basic-info">
             <div class="event-title">{{event.title}}</div>
-            <div class="event-subtitle">{{event.description}}</div>
+            <div class="event-subtitle">
+              <v-row class="ma-0">{{getString(event.tags_details)}}</v-row>
+              <v-row class="ma-0">
+                <span class="subtitle-span" style="padding-left: 0px">3 hrs</span>
+                <v-divider vertical />
+                <span class="subtitle-span">{{event.age_limit}}+</span>
+                <v-divider vertical />
+                <span class="subtitle-span">{{getString(event.languages_details)}}</span>
+              </v-row>
+            </div>
           </div>
           <div class="event-button">
             <v-btn block color="secondary" height="50" @click="dialog = true">REGISTER</v-btn>
@@ -23,12 +32,12 @@
         </div>
         <v-divider></v-divider>
         <v-row class="ma-0">
-          <v-col cols="3" style="padding-left: 0px">{{event.date}}</v-col>
+          <v-col cols="3" style="padding-left: 0px">{{getDate}}</v-col>
           <v-col cols="2" class="rupee-col">
             <img :src="require('@/assets/icons/rupee.png')" alt="Rupees" height="24" />
             <span>999</span>
           </v-col>
-          <v-col cols="4">
+          <v-col cols="7">
             <v-icon>mdi-map-marker</v-icon>
             <span>{{event.city}}</span>
           </v-col>
@@ -42,15 +51,15 @@
           <div class="views-entries card">
             <v-row class="count-row ma-0">
               <span>Views:</span>
-              <span>10</span>
+              <span>{{event.views_count}}</span>
             </v-row>
             <v-row class="count-row ma-0">
-              <span>Registered:</span>
-              <span>10/20</span>
+              <span>Available Seats:</span>
+              <span>{{event.available_seats}}/{{event.number_of_seats}}</span>
             </v-row>
-            <v-row class="count-row text-important ma-0">
+            <v-row class="count-row ma-0">
               <span style="padding-right: 5px">Last date to register:</span>
-              <span>{{event.date}}</span>
+              <span class="text-important">{{getLastDate}}</span>
             </v-row>
           </div>
           <div class="event-map card">
@@ -74,13 +83,17 @@
         <div class="content-right">
           <div class="event-detail-info card" style="padding-bottom: 0px">
             <div class="description">
+              <div class="title1">Venue</div>
+              <div class="text-area">{{event.city}}</div>
+            </div>
+            <div class="description">
               <div class="title1">Description</div>
               <div class="text-area">{{event.description}}</div>
             </div>
             <v-divider style="margin-bottom: 10px"></v-divider>
             <div class="description">
               <div class="title1">Terms & Conditions</div>
-              <div class="text-area">{{event.description}}</div>
+              <div class="text-area">{{event.terms_and_conditions}}</div>
             </div>
           </div>
         </div>
@@ -103,6 +116,7 @@
 </template>
 
 <script>
+import moment from "moment";
 import EventRegistrationForm from "../../components/EventRegistrationForm";
 import Loader from "../../components/Loader";
 import { getEventDetail } from "../../apis/event";
@@ -121,6 +135,18 @@ export default {
   mounted() {
     this.getEvent();
   },
+  computed: {
+    getDate() {
+      let date = moment(this.event.start_time).format("DD MMMM, YYYY; hh:mm A");
+      return date;
+    },
+    getLastDate() {
+      let date = moment(this.event.start_time);
+      date = date.subtract(this.event.booking_closes_before, "days");
+      date = date.format("DD MMMM, YYYY");
+      return date;
+    }
+  },
   methods: {
     getEvent() {
       getEventDetail(this.eventId)
@@ -133,6 +159,18 @@ export default {
         .finally(() => {
           this.loading = false;
         });
+    },
+    getString(list) {
+      let listLength = list.length;
+      if (!listLength) return "";
+      else {
+        let names = "";
+        list.forEach((obj, index) => {
+          if (index === listLength - 1) names += obj.title;
+          else names += `${obj.title}, `;
+        });
+        return names;
+      }
     }
   }
 };
@@ -190,9 +228,13 @@ export default {
 
 .event-subtitle {
   width: 100%;
-  padding: 10px 0px;
+  padding-top: 10px;
   font-size: 18px;
   color: var(--v-text-lighten5);
+}
+
+.subtitle-span {
+  padding: 0px 15px;
 }
 
 .event-button {
