@@ -1,7 +1,7 @@
 <template>
   <v-card
     class="event-card"
-    @click="$router.push({name: 'EventDetail', params: {eventId: event.id, event: event}})"
+    @click="$router.push({name: 'EventDetail', params: {eventId: event.id}})"
   >
     <div class="image-div">
       <img :src="require('@/assets/events/concert.jpg')" :alt="event.title" class="event-image" />

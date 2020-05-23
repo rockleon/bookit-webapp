@@ -22,15 +22,7 @@ export default {
   components: { EventCard, Loader },
   data() {
     return {
-      events: [
-        {
-          id: "sadq3q23qcwe",
-          title: "Event 1",
-          description: "asd asda sdasd asdasd asdasd",
-          date: "23 May, 2020",
-          city: "Mumbai"
-        }
-      ],
+      events: [],
       loading: true
     };
   },
@@ -41,7 +33,6 @@ export default {
     fetchEvents() {
       getEvents()
         .then(response => {
-          console.log(response.data);
           this.events = response.data.results;
         })
         .catch(error => {

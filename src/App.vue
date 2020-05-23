@@ -2,7 +2,14 @@
   <div id="app">
     <v-app>
       <v-content>
-        <div class="app-content">
+        <div v-if="$route.meta.admin" class="app-content">
+          <top-bar class="top-bar" />
+          <div class="router-content">
+            <side-bar class="side-bar" />
+            <router-view></router-view>
+          </div>
+        </div>
+        <div v-else class="app-content">
           <top-bar class="top-bar" />
           <div class="router-content">
             <router-view></router-view>
@@ -15,10 +22,11 @@
 
 <script>
 import TopBar from "./components/TopBar";
+import SideBar from "./components/SideBar";
 
 export default {
   name: "App",
-  components: { TopBar }
+  components: { TopBar, SideBar }
 };
 </script>
 
@@ -49,10 +57,19 @@ html {
   width: 100%;
 }
 
+.side-bar {
+  position: absolute;
+  top: 0px;
+  height: 100%;
+  width: 100%;
+}
+
 .router-content {
   position: relative;
   height: calc(100vh - 80px);
   overflow-y: auto;
+  display: flex;
+  flex-direction: row;
 }
 
 ::-webkit-scrollbar {
