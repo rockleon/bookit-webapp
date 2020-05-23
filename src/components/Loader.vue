@@ -1,6 +1,6 @@
 <template>
   <div class="loader-container">
-    <v-progress-circular indeterminate color="secondary"></v-progress-circular>
+    <v-progress-circular indeterminate size="50" color="secondary"></v-progress-circular>
   </div>
 </template>
 
@@ -21,6 +21,6 @@ export default {};
   width: 100%;
   height: 100%;
   z-index: 3;
-  background-color: rgba(218, 218, 218, 0.3);
+  background-color: rgba(196, 195, 195, 0.7);
 }
 </style>

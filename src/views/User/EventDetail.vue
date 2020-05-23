@@ -16,7 +16,7 @@
           <div class="event-subtitle">{{event.description}}</div>
         </div>
         <div class="event-button">
-          <v-btn block color="secondary" height="50">REGISTER</v-btn>
+          <v-btn block color="secondary" height="50" @click="dialog = true">REGISTER</v-btn>
         </div>
       </div>
       <v-divider></v-divider>
@@ -54,8 +54,16 @@
         <div class="event-map card">
           <span>Check location on map</span>
         </div>
-        <div class="event-map card">
-          <span>Share this Event</span>
+        <div class="event-share card">
+          <v-row class="ma-0">Share this Event</v-row>
+          <v-row class="ma-0" style="padding-top: 15px">
+            <a href="https://www.facebook.com/" target="blank">
+              <img src="https://i.imgur.com/lR0VyDO.png" alt="facebook" srcset width="25" />
+            </a>
+            <a href="https://twitter.com/" target="blank" style="margin-left: 15px;">
+              <img src="https://i.imgur.com/6rKoUJ7.png" width="30" alt="twitter" srcset />
+            </a>
+          </v-row>
         </div>
       </div>
       <!-- Left Content end -->
@@ -76,15 +84,32 @@
       </div>
       <!-- Right Content end -->
     </v-row>
+
+    <!-- Event Registration Form Modal -->
+    <v-dialog v-model="dialog" persistent max-width="600">
+      <v-card>
+        <event-registration-form
+          :eventId="eventId"
+          :title="event.title"
+          @closeModal="dialog = false"
+        />
+      </v-card>
+    </v-dialog>
+    <!-- Event Registration Form Modal end -->
   </div>
 </template>
 
 <script>
+import EventRegistrationForm from "../../components/EventRegistrationForm";
+
 export default {
   name: "EventDetail",
   props: ["eventId", "event"],
+  components: { EventRegistrationForm },
   data() {
-    return {};
+    return {
+      dialog: false
+    };
   }
 };
 </script>
