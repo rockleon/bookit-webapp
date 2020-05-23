@@ -15,19 +15,31 @@
     <v-divider></v-divider>
 
     <v-list nav dense>
-      <v-list-item link @click="$router.push({name: 'Dashboard'})">
+      <v-list-item
+        link
+        :class="activeList === 0 ? 'list-active':''"
+        @click="$router.push({name: 'Dashboard'})"
+      >
         <v-list-item-icon>
           <v-icon>mdi-view-dashboard</v-icon>
         </v-list-item-icon>
         <v-list-item-title>Dashboard</v-list-item-title>
       </v-list-item>
-      <v-list-item link @click="$router.push({name: 'AdminEvents'})">
+      <v-list-item
+        link
+        :class="activeList === 1 ? 'list-active':''"
+        @click="$router.push({name: 'AdminEvents'})"
+      >
         <v-list-item-icon>
           <v-icon>mdi-format-list-text</v-icon>
         </v-list-item-icon>
         <v-list-item-title>View Events</v-list-item-title>
       </v-list-item>
-      <v-list-item link @click="$router.push({name: 'PublishEvent'})">
+      <v-list-item
+        link
+        :class="activeList === 2 ? 'list-active':''"
+        @click="$router.push({name: 'PublishEvent'})"
+      >
         <v-list-item-icon>
           <v-icon>mdi-book-plus-multiple</v-icon>
         </v-list-item-icon>
@@ -42,8 +54,28 @@ export default {
   name: "SideBar",
   data() {
     return {
-      drawer: true
+      drawer: true,
+      activeList: 0
     };
+  },
+  created() {
+    this.setActiveNav();
+  },
+  watch: {
+    $route: {
+      handler() {
+        this.setActiveNav();
+      },
+      deep: true
+    }
+  },
+  methods: {
+    setActiveNav() {
+      let pathName = this.$route.path.split("/")[2];
+      if (pathName === "dashboard") this.activeList = 0;
+      else if (pathName === "events") this.activeList = 1;
+      else this.activeList = 2;
+    }
   }
 };
 </script>
@@ -53,5 +85,9 @@ export default {
   /* color: var(--v-accent-lighten5) !important; */
   /* background-color: var(--v-background-darken2) !important; */
   /* background-color: rgb(0, 0, 0, 0.7) !important; */
+}
+
+.list-active {
+  background-color: var(--v-accent-lighten1);
 }
 </style>
