@@ -87,7 +87,7 @@
       <v-btn
         large
         class="form-buttons text-capitalize pa-0"
-        color="success"
+        color="secondary"
         :loading="sumbitLoading"
         :disabled="sumbitLoading"
         @click="handleSubmit"
@@ -146,9 +146,9 @@ export default {
         this.disableTickets = true;
       } else this.disableTickets = false;
     },
-    handleSubmit() {
+    async handleSubmit() {
       this.sumbitLoading = true;
-      this.$refs.registrationForm.validate();
+      await this.$refs.registrationForm.validate();
       if (!this.valid) {
         this.sumbitLoading = false;
       } else {
@@ -167,6 +167,16 @@ export default {
 <style scoped>
 .registration-form {
   width: 100%;
+}
+
+.event-title {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 15px;
+  font-size: 26px;
+  color: var(--v-accent-lighten5);
+  background-color: var(--v-primary-base);
 }
 
 .form-row {
@@ -188,16 +198,6 @@ export default {
 
 .form-buttons {
   font-size: 16px;
-}
-
-.event-title {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  padding: 15px;
-  font-size: 26px;
-  color: var(--v-accent-lighten5);
-  background-color: var(--v-primary-base);
 }
 
 .attachment-notes {
