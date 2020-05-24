@@ -2,11 +2,16 @@
   <v-form ref="loginForm" v-model="valid" class="login-form" @submit.prevent>
     <v-row class="event-title ma-0">Admin Sign In</v-row>
     <v-row class="form-row ma-0" style="padding-top: 20px;">
+      <v-col
+        cols="12"
+        class="form-col error--text"
+        style="text-align: center"
+      >{{ incorrectCreds ? 'Incorrect Username or Password':''}}</v-col>
       <v-col cols="12" class="form-col">
         <v-text-field
-          v-model="email"
-          label="Email"
-          :rules="[rules.required, rules.email]"
+          v-model="username"
+          label="Username"
+          :rules="[rules.required]"
           validate-on-blur
           class="pa-0"
         ></v-text-field>
@@ -42,33 +47,45 @@
 </template>
 
 <script>
+import { login } from "../apis/auth";
+
 export default {
   name: "LoginForm",
   data() {
     return {
       valid: false,
-      email: null,
+      username: null,
       password: null,
       submitLoading: false,
+      incorrectCreds: false,
       rules: {
-        required: value => !!value || "required",
-        email: value =>
-          // eslint-disable-next-line
-          /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-            value
-          ) || "E-mail must be valid"
+        required: value => !!value || "required"
       }
     };
   },
   methods: {
     async handleSubmit() {
+      this.incorrectCreds = false;
       this.submitLoading = true;
       await this.$refs.loginForm.validate();
       if (!this.valid) {
         this.submitLoading = false;
       } else {
-        this.$emit("closeModal");
-        this.submitLoading = false;
+        let payload = {
+          username: this.username,
+          password: this.password
+        };
+        login(payload)
+          .then(response => {
+            console.log(response.data);
+            this.$emit("closeModal");
+            this.submitLoading = false;
+          })
+          .catch(error => {
+            console.log(error);
+            this.submitLoading = false;
+            this.incorrectCreds = true;
+          });
       }
     },
     resetForm() {

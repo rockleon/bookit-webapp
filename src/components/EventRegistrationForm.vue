@@ -80,7 +80,13 @@
     </v-row>
     <v-row class="form-row ma-0">
       <v-col cols="11">
-        <v-file-input show-size label="ID Card" v-model="card" class="pa-0"></v-file-input>
+        <v-file-input
+          show-size
+          label="ID Card"
+          v-model="card"
+          class="pa-0"
+          :rules="[rules.required, rules.fileType]"
+        ></v-file-input>
       </v-col>
     </v-row>
     <v-row class="form-button-row ma-0">
@@ -105,6 +111,7 @@
 
 <script>
 import { postAttachment } from "../apis/attachment";
+import { postBooking } from "../apis/booking";
 
 export default {
   name: "EventRegistrationForm",
@@ -121,6 +128,8 @@ export default {
       disableTickets: false,
       sumbitLoading: false,
       valid: false,
+      isFileValid: false,
+      fileValidTypes: ["image/jpg", "image/jpeg", "image/png"],
       registrationTypes: [
         { id: "Self", text: "Self" },
         { id: "Group", text: "Group" },
@@ -137,7 +146,10 @@ export default {
         numbersOnly: value =>
           (value && /^[0-9]+$/.test(value)) || "Only numbers are allowed",
         tenDigits: value => (value && value.length === 10) || "10 digits only",
-        greaterThanZero: value => (value && value > 0) || "Invalid value"
+        greaterThanZero: value => (value && value > 0) || "Invalid value",
+        fileType: value =>
+          (value && this.fileValidTypes.includes(value.type)) ||
+          "Invalid file type"
       }
     };
   },
@@ -156,16 +168,40 @@ export default {
         console.log("error");
       } else {
         const data = new FormData();
-        data.append("document", this.card);
+        data.append("path", this.card);
         postAttachment(data)
           .then(response => {
             console.log(response.data);
+            let payload = {
+              event: this.eventId,
+              registration_type: this.typeOfBooking,
+              number_of_tickets: this.numOfTickets,
+              user: {
+                first_name: this.firstName,
+                last_name: this.lastName,
+                mobile_number: this.mobile,
+                email: this.email,
+                id_card: response.data.id
+              }
+            };
+            postBooking(payload)
+              .then(response2 => {
+                console.log(response2.data);
+              })
+              .catch(error => {
+                console.log(error);
+              })
+              .finally(() => {
+                this.$emit("closeModal");
+                this.sumbitLoading = false;
+              });
           })
           .catch(error => {
             console.log(error);
+          })
+          .finally(() => {
+            this.sumbitLoading = false;
           });
-        this.$emit("closeModal");
-        this.sumbitLoading = false;
       }
     },
     handleCancel() {

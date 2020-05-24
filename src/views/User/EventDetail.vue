@@ -18,7 +18,7 @@
             <div class="event-subtitle">
               <v-row class="ma-0">{{getString(event.tags_details)}}</v-row>
               <v-row class="ma-0">
-                <span class="subtitle-span" style="padding-left: 0px">3 hrs</span>
+                <span class="subtitle-span" style="padding-left: 0px">{{event.duration}}</span>
                 <v-divider vertical />
                 <span class="subtitle-span">{{event.age_limit}}+</span>
                 <v-divider vertical />
@@ -35,7 +35,7 @@
           <v-col cols="3" style="padding-left: 0px">{{getDate}}</v-col>
           <v-col cols="2" class="rupee-col">
             <img :src="require('@/assets/icons/rupee.png')" alt="Rupees" height="24" />
-            <span>999</span>
+            <span>{{event.cost_per_person}}</span>
           </v-col>
           <v-col cols="7">
             <v-icon>mdi-map-marker</v-icon>
@@ -84,7 +84,7 @@
           <div class="event-detail-info card" style="padding-bottom: 0px">
             <div class="description">
               <div class="title1">Venue</div>
-              <div class="text-area">{{event.city}}</div>
+              <div class="text-area">{{event.venue}}</div>
             </div>
             <div class="description">
               <div class="title1">Description</div>
