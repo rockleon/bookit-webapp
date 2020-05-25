@@ -72,6 +72,10 @@ html {
   flex-direction: row;
 }
 
+.table-header {
+  font-size: 16px !important;
+}
+
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;

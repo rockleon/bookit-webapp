@@ -73,11 +73,15 @@ export default {
       orderList: [
         {
           id: "start_time",
-          text: "Recent Events"
+          text: "Upcoming Events"
         },
         {
           id: "-views_count",
-          text: "Most Popular Events"
+          text: "Most Viewd Events"
+        },
+        {
+          id: "-views_count",
+          text: "Most Recently Added"
         },
         {
           id: "cost_per_person",

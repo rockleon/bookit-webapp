@@ -137,8 +137,10 @@ export default {
   },
   computed: {
     getDate() {
-      let date = moment(this.event.start_time).format("DD MMMM, YYYY; hh:mm A");
-      return date;
+      let date = moment(this.event.start_time).format("DD/MM/YYYY");
+      if (date === moment().format("DD/MM/YYYY")) {
+        return `Today, ${moment(this.event.start_time).format("hh:mm A")}`;
+      } else return moment(this.event.start_time).format("MM/DD, hh:mm A");
     },
     getLastDate() {
       let date = moment(this.event.start_time);
