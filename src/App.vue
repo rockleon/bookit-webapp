@@ -91,6 +91,10 @@ html {
     0 1px 5px 0 rgba(0, 0, 0, 0.12);
 }
 
+p {
+  margin-bottom: 0px !important;
+}
+
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;

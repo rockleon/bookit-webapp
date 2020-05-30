@@ -4,7 +4,7 @@
     @click="$router.push({name: 'EventDetail', params: {eventId: event.id}})"
   >
     <div class="image-div">
-      <img :src="require('@/assets/events/concert.jpg')" :alt="event.title" class="event-image" />
+      <img :src="event.image_details.path" :alt="event.title" class="event-image" />
     </div>
     <div class="event-content">
       <div class="event-info">

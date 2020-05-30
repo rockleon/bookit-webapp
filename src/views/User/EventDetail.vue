@@ -5,12 +5,7 @@
     <div v-else>
       <div class="event-main-card card">
         <div class="image-div">
-          <img
-            :src="require('@/assets/events/concert.jpg')"
-            alt="event.title"
-            height="400"
-            class="event-image"
-          />
+          <img :src="event.image_details.path" alt="event.title" height="400" class="event-image" />
         </div>
         <div class="info-row">
           <div class="event-basic-info">
@@ -86,11 +81,12 @@
               <div class="title1" style="white-space: pre-line">Venue</div>
               <div class="text-area">{{event.venue}}</div>
             </div>
+            <v-divider style="margin-bottom: 10px; margin-top: 10px"></v-divider>
             <div class="description">
               <div class="title1">Description</div>
               <div class="text-area" v-html="event.description"></div>
             </div>
-            <v-divider style="margin-bottom: 10px"></v-divider>
+            <v-divider style="margin-bottom: 10px; margin-top: 10px"></v-divider>
             <div class="description">
               <div class="title1">Terms & Conditions</div>
               <div class="text-area" v-html="event.terms_and_conditions"></div>
