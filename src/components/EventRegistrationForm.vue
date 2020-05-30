@@ -94,8 +94,8 @@
         large
         class="form-buttons text-capitalize pa-0"
         color="secondary"
-        :loading="sumbitLoading"
-        :disabled="sumbitLoading"
+        :loading="submitLoading"
+        :disabled="submitLoading"
         @click="handleSubmit"
       >Submit</v-btn>
       <v-btn
@@ -126,10 +126,10 @@ export default {
       numOfTickets: null,
       card: null,
       disableTickets: false,
-      sumbitLoading: false,
+      submitLoading: false,
       valid: false,
       isFileValid: false,
-      fileValidTypes: ["image/jpg", "image/jpeg", "image/png"],
+      fileValidTypes: ["image/jpg", "image/jpeg", "image/png", "application/pdf"],
       registrationTypes: [
         { id: "Self", text: "Self" },
         { id: "Group", text: "Group" },
@@ -161,10 +161,10 @@ export default {
       } else this.disableTickets = false;
     },
     async handleSubmit() {
-      this.sumbitLoading = true;
+      this.submitLoading = true;
       await this.$refs.registrationForm.validate();
       if (!this.valid) {
-        this.sumbitLoading = false;
+        this.submitLoading = false;
         console.log("error");
       } else {
         const data = new FormData();
@@ -193,14 +193,14 @@ export default {
               })
               .finally(() => {
                 this.$emit("closeModal");
-                this.sumbitLoading = false;
+                this.submitLoading = false;
               });
           })
           .catch(error => {
             console.log(error);
           })
           .finally(() => {
-            this.sumbitLoading = false;
+            this.submitLoading = false;
           });
       }
     },

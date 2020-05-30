@@ -46,7 +46,11 @@
               <td class="table-message" colspan="5">No Results</td>
             </tr>
             <tr v-for="item in items" :key="item.id">
-              <td class="td table-name" style="width: 28%;">{{ item.title }}</td>
+              <td
+                class="td table-name"
+                style="width: 28%;"
+                @click="$router.push({name:'AdminEventEdit', params:{eventId: item.id}})"
+              >{{ item.title }}</td>
               <td class="td" style="width: 21%;">{{ formatDate(item.start_time) }}</td>
               <td
                 class="td"
@@ -79,10 +83,14 @@ export default {
     return {
       events: [],
       options: {
+        page: 1,
+        itemsPerPage: 10,
+        groupBy: [],
+        groupDesc: [],
         sortBy: 1,
         sortDesc: 1,
-        page: 1,
-        itemsPerPage: 10
+        multiSort: false,
+        mustSort: false
       },
       totalItems: 0,
       pageLoading: true,
@@ -138,6 +146,17 @@ export default {
     };
   },
   watch: {
+    options: {
+      handler(oldVal, newVal) {
+        if (
+          oldVal.itemsPerPage !== newVal.itemsPerPage ||
+          oldVal.page !== newVal.page
+        ) {
+          this.fetchEvents();
+        }
+      },
+      deep: true
+    },
     ordering: function() {
       this.fetchEvents();
     }

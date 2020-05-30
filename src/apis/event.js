@@ -16,18 +16,18 @@ export function getEventDetail(id, params) {
   });
 }
 
-export function postEvent(params) {
+export function postEvent(payload) {
   return axios({
     url: `events`,
     method: "post",
-    params,
+    data: payload,
   });
 }
 
-export function patchEventDetail(id, params) {
+export function patchEvent(id, payload) {
   return axios({
     url: `events/${id}`,
     method: "put",
-    params,
+    data: payload,
   });
 }

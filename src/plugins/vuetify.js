@@ -18,6 +18,7 @@ export default new Vuetify({
         background: "#EEEEEE",
         card1: "F5F5F6",
         card2: "FCFCFC",
+        card3: "FAFAFA",
         text: "000000",
         error: "#FD322B",
         info: "#3AA0F3",

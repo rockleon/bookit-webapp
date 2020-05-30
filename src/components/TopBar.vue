@@ -69,7 +69,7 @@ export default {
 }
 
 .list {
-  background-color: var(--v-secondary-lighten2) !important;
+  background-color: var(--v-accent-lighten4) !important;
 }
 
 .list-item {

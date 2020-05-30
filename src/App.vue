@@ -2,7 +2,7 @@
   <div id="app">
     <v-app>
       <v-content>
-        <div v-if="$route.meta.admin" class="app-content">
+        <div v-if="$route.meta.requiresAuth" class="app-content">
           <top-bar class="top-bar" />
           <div class="router-content">
             <side-bar class="side-bar" />
@@ -76,6 +76,21 @@ html {
   font-size: 16px !important;
 }
 
+.vdatetime-input {
+  width: 100%;
+  border-radius: 4px;
+  padding: 12px 12px;
+  margin-bottom: 8px;
+  background-color: white !important;
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.quillWrapper {
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
@@ -85,5 +100,24 @@ html {
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
   background: #c2c9d2;
+}
+
+::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #bdbdbd;
+  font-weight: 300 !important;
+  opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: #bdbdbd;
+  font-weight: 300 !important;
+}
+
+::-ms-input-placeholder {
+  /* Microsoft Edge */
+  color: #bdbdbd;
+  font-weight: 300 !important;
 }
 </style>

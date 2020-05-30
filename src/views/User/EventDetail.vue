@@ -83,17 +83,17 @@
         <div class="content-right">
           <div class="event-detail-info card" style="padding-bottom: 0px">
             <div class="description">
-              <div class="title1">Venue</div>
+              <div class="title1" style="white-space: pre-line">Venue</div>
               <div class="text-area">{{event.venue}}</div>
             </div>
             <div class="description">
               <div class="title1">Description</div>
-              <div class="text-area">{{event.description}}</div>
+              <div class="text-area" v-html="event.description"></div>
             </div>
             <v-divider style="margin-bottom: 10px"></v-divider>
             <div class="description">
               <div class="title1">Terms & Conditions</div>
-              <div class="text-area">{{event.terms_and_conditions}}</div>
+              <div class="text-area" v-html="event.terms_and_conditions"></div>
             </div>
           </div>
         </div>

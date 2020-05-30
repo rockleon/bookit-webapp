@@ -1,15 +1,15 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import store from "../store";
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
-    redirect: "login",
+    redirect: "/events",
     meta: {
       requiresAuth: false,
-      admin: false,
     },
   },
   {
@@ -18,7 +18,6 @@ const routes = [
     component: () => import("../views/User/EventList.vue"),
     meta: {
       requiresAuth: false,
-      admin: false,
     },
   },
   {
@@ -28,7 +27,6 @@ const routes = [
     component: () => import("../views/User/EventDetail.vue"),
     meta: {
       requiresAuth: false,
-      admin: false,
     },
   },
   // Admin
@@ -38,7 +36,6 @@ const routes = [
     component: () => import("../views/Admin/Dashboard.vue"),
     meta: {
       requiresAuth: true,
-      admin: true,
     },
   },
   {
@@ -47,7 +44,6 @@ const routes = [
     component: () => import("../views/Admin/Events.vue"),
     meta: {
       requiresAuth: true,
-      admin: true,
     },
   },
   {
@@ -57,7 +53,6 @@ const routes = [
     component: () => import("../views/Admin/EventDetail.vue"),
     meta: {
       requiresAuth: true,
-      admin: true,
     },
   },
   {
@@ -67,7 +62,6 @@ const routes = [
     component: () => import("../views/Admin/EventAddEdit.vue"),
     meta: {
       requiresAuth: true,
-      admin: true,
     },
   },
   {
@@ -76,7 +70,6 @@ const routes = [
     component: () => import("../views/Admin/EventAddEdit.vue"),
     meta: {
       requiresAuth: true,
-      admin: true,
     },
   },
 ];
@@ -88,10 +81,17 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.meta && to.meta.requiresAuth) {
-    // const token = localStorage.getItem("GSU_TOKEN");
-    // if (token && token !== "undefined") {
-    // }
-    next();
+    const token = localStorage.getItem("BOOKIT_TOKEN");
+    if (token && token !== "undefined") {
+      let isLoggedIn = store.getters.isLoggedIn;
+      if (isLoggedIn) next();
+      else {
+        localStorage.removeItem("BOOKIT_TOKEN");
+        next("events");
+      }
+    } else {
+      next("events");
+    }
   } else {
     next();
   }

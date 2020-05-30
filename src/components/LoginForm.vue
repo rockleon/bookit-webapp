@@ -47,7 +47,8 @@
 </template>
 
 <script>
-import { login } from "../apis/auth";
+import { login, me } from "../apis/auth";
+import { mapActions } from "vuex";
 
 export default {
   name: "LoginForm",
@@ -64,6 +65,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["saveUserData"]),
     async handleSubmit() {
       this.incorrectCreds = false;
       this.submitLoading = true;
@@ -77,9 +79,19 @@ export default {
         };
         login(payload)
           .then(response => {
-            console.log(response.data);
-            this.$emit("closeModal");
-            this.submitLoading = false;
+            localStorage.setItem("BOOKIT_TOKEN", response.data.key);
+            me()
+              .then(response => {
+                this.saveUserData(response.data);
+                this.$router.push({ name: "Dashboard" });
+              })
+              .catch(error => {
+                console.log(error);
+              })
+              .finally(() => {
+                this.$emit("closeModal");
+                this.submitLoading = false;
+              });
           })
           .catch(error => {
             console.log(error);
