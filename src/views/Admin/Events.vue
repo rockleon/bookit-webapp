@@ -2,7 +2,7 @@
   <div class="events">
     <loader v-if="pageLoading" />
     <v-row class="events-row ma-0">
-      <v-col cols="5" class="filter-cols">
+      <v-col cols="5" class="filter-cols" align-self="end">
         <v-card class="filter-card">
           <v-text-field
             placeholder="Search by Name or City"
@@ -15,8 +15,9 @@
           </v-text-field>
         </v-card>
       </v-col>
-      <v-col cols="4" class="filter-cols"></v-col>
-      <v-col cols="3" class="filter-cols">
+      <v-col cols="2" class="filter-cols"></v-col>
+      <v-col cols="3" class="filter-cols" style="padding-right: 20px;">
+        <v-row class="ma-0 filter-text">Order by</v-row>
         <v-select
           solo
           v-model="ordering"
@@ -27,6 +28,14 @@
           hide-details
           prepend-inner-icon="mdi-format-align-bottom"
         ></v-select>
+      </v-col>
+      <v-col cols="2" align-self="end" align="end" class="filter-cols" style="padding-left: 20px;">
+        <v-btn
+          color="secondary"
+          height="48"
+          style="font-size: 16px; font-weight: 600"
+          @click="$router.push({name: 'PublishEvent'})"
+        >+ Publish Event</v-btn>
       </v-col>
     </v-row>
     <v-row class="events-row ma-0">
@@ -49,7 +58,7 @@
               <td
                 class="td table-name"
                 style="width: 28%;"
-                @click="$router.push({name:'AdminEventEdit', params:{eventId: item.id}})"
+                @click="$router.push({name:'AdminEventDetail', params:{eventId: item.id}})"
               >{{ item.title }}</td>
               <td class="td" style="width: 21%;">{{ formatDate(item.start_time) }}</td>
               <td
@@ -207,12 +216,12 @@ export default {
           tagNames += `${obj.title}, `;
           if (index === 1 && tagList.length > 2) {
             tagNames = tagNames.trim();
-            tagNames += "...";
+            tagNames += ".....";
             break;
           }
         }
       }
-      return tagNames;
+      return tagNames.slice(0, tagNames.length - 2);
     }
   }
 };
@@ -258,5 +267,10 @@ export default {
   align-items: flex-end;
   padding: 2%;
   padding-top: 0px;
+}
+
+.filter-text {
+  color: #8a8a8a;
+  font-size: 14px;
 }
 </style>

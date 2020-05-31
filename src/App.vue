@@ -95,6 +95,20 @@ p {
   margin-bottom: 0px !important;
 }
 
+.v-dialog--fullscreen {
+  overflow: hidden !important;
+}
+
+.pa-horizontal-0 {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
+.pa-vertical-0 {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;

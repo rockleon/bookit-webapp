@@ -4,7 +4,7 @@
     @click="$router.push({name: 'EventDetail', params: {eventId: event.id}})"
   >
     <div class="image-div">
-      <img :src="event.image_details.path" :alt="event.title" class="event-image" />
+      <v-img :src="event.image_details.path" :alt="event.title" class="event-image" contain></v-img>
     </div>
     <div class="event-content">
       <div class="event-info">
@@ -66,8 +66,7 @@ export default {
 
 .event-image {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  /* height: 100%; */
   transition: transform 0.2s;
 }
 

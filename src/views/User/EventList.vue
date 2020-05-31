@@ -2,7 +2,7 @@
   <div class="event-container">
     <loader v-if="loading" />
     <v-row class="search-filter ma-0">
-      <v-col cols="5" class="filter-cols">
+      <v-col cols="5" class="filter-cols" align-self="end">
         <v-card class="filter-card">
           <v-text-field
             placeholder="Search by Name or City"
@@ -17,6 +17,7 @@
         </v-card>
       </v-col>
       <v-col cols="4" class="filter-cols">
+        <v-row class="ma-0 filter-text">Filter by tags</v-row>
         <v-select
           v-model="filtertags"
           :items="tagList"
@@ -31,6 +32,7 @@
         ></v-select>
       </v-col>
       <v-col cols="3" class="filter-cols">
+        <v-row class="ma-0 filter-text">Order by</v-row>
         <v-select
           solo
           v-model="ordering"
@@ -42,6 +44,7 @@
         ></v-select>
       </v-col>
     </v-row>
+    <v-divider></v-divider>
     <!-- Events List -->
     <v-row class="event-list ma-0">
       <v-col v-for="event in events" :key="event.id" xs="12" sm="12" md="4" class="card-col">
@@ -108,6 +111,7 @@ export default {
   },
   methods: {
     fetchEvents() {
+      this.loading = true;
       let params = {
         search: this.searchVal,
         ordering: this.ordering
@@ -145,11 +149,14 @@ export default {
 .event-container {
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 .event-list {
   width: 100%;
+  height: calc(100vh - 196px);
   padding: 40px;
   padding-top: 0px;
+  overflow: auto;
 }
 
 .card-col {
@@ -158,6 +165,8 @@ export default {
 
 .search-filter {
   padding: 0px 40px;
+  /* border-bottom: 1px solid #979797; */
+  /* box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23); */
 }
 
 .filter-cols {
@@ -169,6 +178,11 @@ export default {
   align-items: flex-end;
   padding: 2%;
   padding-top: 0px;
+}
+
+.filter-text {
+  color: #8a8a8a;
+  font-size: 14px;
 }
 
 @media only screen and (max-width: 600px) {

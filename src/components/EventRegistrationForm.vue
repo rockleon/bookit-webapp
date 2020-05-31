@@ -64,7 +64,7 @@
           type="number"
           item-text="text"
           item-value="id"
-          :rules="[rules.required, rules.greaterThanZero, rules.numbersOnly]"
+          :rules="[rules.required, rules.numbersOnly, rules.greaterThanOne ]"
           validate-on-blur
           :disabled="disableTickets"
           class="pa-0"
@@ -129,7 +129,12 @@ export default {
       submitLoading: false,
       valid: false,
       isFileValid: false,
-      fileValidTypes: ["image/jpg", "image/jpeg", "image/png", "application/pdf"],
+      fileValidTypes: [
+        "image/jpg",
+        "image/jpeg",
+        "image/png",
+        "application/pdf"
+      ],
       registrationTypes: [
         { id: "Self", text: "Self" },
         { id: "Group", text: "Group" },
@@ -146,7 +151,9 @@ export default {
         numbersOnly: value =>
           (value && /^[0-9]+$/.test(value)) || "Only numbers are allowed",
         tenDigits: value => (value && value.length === 10) || "10 digits only",
-        greaterThanZero: value => (value && value > 0) || "Invalid value",
+        greaterThanOne: value =>
+          (value && (this.typeOfBooking === "Self" || value > 1)) ||
+          "Value should be greater than 1",
         fileType: value =>
           (value && this.fileValidTypes.includes(value.type)) ||
           "Invalid file type"
@@ -175,7 +182,7 @@ export default {
             let payload = {
               event: this.eventId,
               registration_type: this.typeOfBooking,
-              number_of_tickets: this.numOfTickets,
+              number_of_tickets: parseInt(this.numOfTickets),
               user: {
                 first_name: this.firstName,
                 last_name: this.lastName,

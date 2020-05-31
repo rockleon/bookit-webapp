@@ -5,7 +5,13 @@
     <div v-else>
       <div class="event-main-card card">
         <div class="image-div">
-          <img :src="event.image_details.path" alt="event.title" height="400" class="event-image" />
+          <v-img
+            :src="event.image_details.path"
+            alt="event.title"
+            height="400"
+            class="event-image"
+            contain
+          ></v-img>
         </div>
         <div class="info-row">
           <div class="event-basic-info">
@@ -22,7 +28,13 @@
             </div>
           </div>
           <div class="event-button">
-            <v-btn block color="secondary" height="50" @click="dialog = true">REGISTER</v-btn>
+            <v-btn
+              v-if="$route.name === 'EventDetail'"
+              block
+              color="secondary"
+              height="50"
+              @click="dialog = true"
+            >REGISTER</v-btn>
           </div>
         </div>
         <v-divider></v-divider>
@@ -197,11 +209,11 @@ export default {
 
 .image-div {
   width: 100%;
+  background-color: #efefef;
 }
 
 .event-image {
   width: 100%;
-  object-fit: cover;
 }
 
 .info-row {
