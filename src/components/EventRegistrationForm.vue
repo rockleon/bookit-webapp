@@ -113,6 +113,7 @@
 import { postAttachment } from "../apis/attachment";
 import { postBooking } from "../apis/booking";
 import { jsPDF } from "jspdf";
+
 export default {
   name: "EventRegistrationForm",
   props: ["eventId", "title"],
