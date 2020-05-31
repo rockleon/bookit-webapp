@@ -175,7 +175,8 @@ export default {
         limit: itemsPerPage,
         offset: itemsPerPage * (page - 1),
         search: this.searchVal,
-        ordering: this.ordering
+        ordering: this.ordering,
+        is_admin: true
       };
       getEvents(params)
         .then(response => {

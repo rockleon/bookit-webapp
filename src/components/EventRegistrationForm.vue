@@ -112,18 +112,19 @@
 <script>
 import { postAttachment } from "../apis/attachment";
 import { postBooking } from "../apis/booking";
-
+import { jsPDF } from "jspdf";
 export default {
   name: "EventRegistrationForm",
   props: ["eventId", "title"],
   data() {
     return {
+      booking: null,
       firstName: null,
       lastName: null,
       email: null,
       mobile: null,
       typeOfBooking: null,
-      numOfTickets: null,
+      numOfTickets: 0,
       card: null,
       disableTickets: false,
       submitLoading: false,
@@ -175,7 +176,7 @@ export default {
             let payload = {
               event: this.eventId,
               registration_type: this.typeOfBooking,
-              number_of_tickets: this.numOfTickets,
+              number_of_tickets: this.numOfTickets.toInteger(),
               user: {
                 first_name: this.firstName,
                 last_name: this.lastName,
@@ -186,7 +187,20 @@ export default {
             };
             postBooking(payload)
               .then(response2 => {
-                console.log(response2.data);
+                this.booking = response2.data;
+                var img = new Image();
+                img.addEventListener('load', function() {
+                    var doc = new jsPDF('landscape')
+                    doc.setFontSize(40)
+                    doc.text(110, 20, 'Event Pass')
+                    doc.addImage(img, 'JPEG', 15, 30, 270, 100)
+                    doc.setFontSize(30)
+                    doc.text(15, 150, 'Type: '+ this.booking.registration_type)
+                    doc.text(15, 170, 'No. of Tickets: '+ this.booking.number_of_tickets)
+                    doc.text(15, 190, 'Amount: ' + this.booking.total_amount)
+                    doc.save('event_pass.pdf')
+                });
+                img.src = this.booking.event_details.image_details.path;
               })
               .catch(error => {
                 console.log(error);
