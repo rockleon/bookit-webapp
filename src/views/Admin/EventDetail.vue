@@ -1,153 +1,173 @@
 <template>
   <div class="page-container">
     <loader v-if="loading" />
-    <div v-else class="publish-titlebar">
-      <v-col cols="11" class="page-title">{{event.title}}</v-col>
-      <v-col cols="1" class="page-buttons-container">
-        <v-menu offset-y>
-          <template v-slot:activator="{ on }">
-            <v-icon v-on="on">mdi-dots-vertical</v-icon>
-          </template>
-          <v-list style="width: 125px">
-            <v-list-item link>
-              <v-list-item-title class="list-title" @click="openDetail">View Detail</v-list-item-title>
-            </v-list-item>
-            <v-list-item link>
-              <v-list-item-title
-                class="list-title"
+    <div v-else>
+      <div class="publish-titlebar">
+        <v-col cols="11" class="page-title">{{event.title}}</v-col>
+        <v-col cols="1" class="page-buttons-container">
+          <v-menu offset-y>
+            <template v-slot:activator="{ on }">
+              <v-icon v-on="on">mdi-dots-vertical</v-icon>
+            </template>
+            <v-list style="width: 125px">
+              <v-list-item link @click="openDetail">
+                <v-list-item-title class="list-title">View Detail</v-list-item-title>
+              </v-list-item>
+              <v-list-item
+                link
                 @click="$router.push({name:'AdminEventEdit', params:{eventId: $route.params.eventId}})"
-              >Edit</v-list-item-title>
-            </v-list-item>
-            <v-list-item link>
-              <v-list-item-title class="list-title">Delete</v-list-item-title>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </v-col>
-    </div>
-    <div class="event-detail">
-      <div class="row-container">
-        <v-row class="ma-0">
-          <v-col cols="6" class="twin-cards" style="padding-right: 50px">
-            <v-card class="event-status card">
-              <v-row class="ma-0">
-                <v-col cols="1" class="pa-0" align-self="center">
-                  <img
-                    v-if="isEventFinished"
-                    :src="require('@/assets/icons/green-tick-filled.png')"
-                    alt="green tick"
-                    height="40"
-                  />
-                  <img
-                    v-else
-                    :src="require('@/assets/icons/ongoing-icon.png')"
-                    alt="ongoing"
-                    height="40"
-                  />
-                </v-col>
-                <v-col cols="11">
-                  <v-row class="ma-0 card-title">{{isEventFinished ? 'Completed':'Remaining'}}</v-row>
-                  <v-row
-                    class="ma-0 card-subtitle"
-                  >{{isEventFinished ? 'Congratulations! The event has been completed':'Event arrangements are still going on'}}</v-row>
-                </v-col>
-              </v-row>
-            </v-card>
-          </v-col>
-          <v-col cols="6" class="twin-cards" style="padding-left: 50px">
-            <v-card class="event-money card">
-              <v-row class="ma-0">
-                <v-col cols="1" class="pa-0" align-self="center">
-                  <img :src="require('@/assets/icons/rupee.png')" alt="money bag" height="50" />
-                </v-col>
-                <v-col cols="11">
-                  <v-row class="ma-0 card-title">{{totalCostEarned}}</v-row>
-                  <v-row class="ma-0 card-subtitle">Total money earned from ticket sale</v-row>
-                </v-col>
-              </v-row>
-            </v-card>
-          </v-col>
-        </v-row>
+              >
+                <v-list-item-title class="list-title">Edit</v-list-item-title>
+              </v-list-item>
+              <v-list-item link @click="handleDeleteEvent">
+                <v-list-item-title class="list-title">Delete</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
+        </v-col>
       </div>
-      <div class="row-container" style="margin: 20px 0px;">
-        <v-row class="ma-0">
-          <v-col cols="6" class="twin-cards" style="padding-right: 50px">
-            <v-card class="event-stats card">
-              <v-row class="ma-0">
-                <v-col cols="12" class="seat-progress-stats">
-                  <v-row class="card-title ma-0">Tickets Sold</v-row>
-                  <v-row class="seats-progress ma-0">
-                    <v-progress-linear
-                      color="secondary"
-                      height="15"
-                      :value="percentTicketsSold"
-                      striped
-                    ></v-progress-linear>
-                  </v-row>
-                </v-col>
-              </v-row>
-              <v-row class="ma-0" style="padding: 0px 12px 12px 12px;">
-                <v-col cols="4" class="seat-count-col">
-                  <span>Total Tickets</span>
-                  <span class="stats-number">{{event.number_of_seats}}</span>
-                </v-col>
-                <v-col cols="4" class="seat-count-col">
-                  <span>Tickets Sold</span>
-                  <span class="stats-number">{{event.number_of_seats - event.available_seats}}</span>
-                </v-col>
-                <v-col cols="4" class="seat-count-col">
-                  <span>Total Views</span>
-                  <span class="stats-number">{{event.views_count}}</span>
-                </v-col>
-              </v-row>
-            </v-card>
-          </v-col>
-          <v-col cols="6" class="twin-cards" style="padding-left: 50px"></v-col>
-        </v-row>
+      <div class="event-detail">
+        <div class="row-container">
+          <v-row class="ma-0">
+            <v-col cols="6" style="padding-right: 50px">
+              <v-card class="event-status card">
+                <v-row class="ma-0">
+                  <v-col cols="1" class="pa-0" align-self="center">
+                    <img
+                      v-if="isEventFinished"
+                      :src="require('@/assets/icons/green-tick-filled.png')"
+                      alt="green tick"
+                      height="40"
+                    />
+                    <img
+                      v-else
+                      :src="require('@/assets/icons/ongoing-icon.png')"
+                      alt="ongoing"
+                      height="40"
+                    />
+                  </v-col>
+                  <v-col cols="11">
+                    <v-row
+                      class="ma-0 card-title"
+                    >{{isEventFinished ? 'Completed':'Arrangements Ongoing'}}</v-row>
+                    <v-row
+                      class="ma-0 card-subtitle"
+                    >{{isEventFinished ? 'Congratulations! The event has been completed':'Event arrangements are still going on'}}</v-row>
+                  </v-col>
+                </v-row>
+              </v-card>
+            </v-col>
+            <v-col cols="6" style="padding-left: 50px;">
+              <v-card class="event-money card">
+                <v-row class="ma-0">
+                  <v-col cols="1" class="pa-0" align-self="center">
+                    <img :src="require('@/assets/icons/rupee.png')" alt="money bag" height="50" />
+                  </v-col>
+                  <v-col cols="11">
+                    <v-row class="ma-0 card-title">{{totalCostEarned}}</v-row>
+                    <v-row class="ma-0 card-subtitle">Total money earned from ticket sale</v-row>
+                  </v-col>
+                </v-row>
+              </v-card>
+            </v-col>
+          </v-row>
+        </div>
+        <div class="row-container" style="margin: 20px 0px;">
+          <v-row class="ma-0">
+            <v-col cols="6" style="padding-right: 50px;">
+              <v-card class="event-stats card" style="padding: 8px;">
+                <v-row class="ma-0">
+                  <v-col cols="12" class="seat-progress-stats">
+                    <v-row class="card-title ma-0">Tickets Sold</v-row>
+                    <v-row class="seats-progress ma-0">
+                      <v-progress-linear
+                        color="secondary"
+                        height="15"
+                        :value="percentTicketsSold"
+                        striped
+                      ></v-progress-linear>
+                    </v-row>
+                  </v-col>
+                </v-row>
+                <v-row class="ma-0" style="padding: 0px 12px 12px 12px;">
+                  <v-col cols="4" class="seat-count-col">
+                    <span>Total Tickets</span>
+                    <span class="stats-number">{{event.number_of_seats}}</span>
+                  </v-col>
+                  <v-col cols="4" class="seat-count-col">
+                    <span>Tickets Sold</span>
+                    <span class="stats-number">{{event.number_of_seats - event.available_seats}}</span>
+                  </v-col>
+                  <v-col cols="4" class="seat-count-col">
+                    <span>Total Views</span>
+                    <span class="stats-number">{{event.views_count}}</span>
+                  </v-col>
+                </v-row>
+              </v-card>
+            </v-col>
+            <v-col cols="6" style="padding-left: 50px">
+              <v-card class="event-stats card" style="padding: 20px;">
+                <v-row
+                  class="card-title ma-0"
+                  style="padding-bottom: 20px;"
+                >Tickets Sold as per Registration Type</v-row>
+                <pie-chart :chartData="chartData" />
+              </v-card>
+            </v-col>
+          </v-row>
+        </div>
+        <div class="row-container" style="padding: 12px;">
+          <v-card class="event-bookings card">
+            <v-row class="card-title ma-0">Bookings made</v-row>
+          </v-card>
+        </div>
       </div>
+      <v-dialog
+        v-model="dialog"
+        persistent
+        fullscreen
+        hide-overlay
+        transition="dialog-bottom-transition"
+      >
+        <v-card>
+          <v-toolbar dark color="primary">
+            <v-btn icon dark @click="dialog = false">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+            <v-toolbar-title>Detail View</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-toolbar-items>
+              <v-btn
+                dark
+                text
+                @click="$router.push({name: 'AdminEventEdit', params:{eventId: eventId}})"
+              >Edit</v-btn>
+            </v-toolbar-items>
+          </v-toolbar>
+          <event-detail :eventId="this.eventId" class="detail-view" />
+        </v-card>
+      </v-dialog>
     </div>
-    <v-dialog
-      v-model="dialog"
-      persistent
-      fullscreen
-      hide-overlay
-      transition="dialog-bottom-transition"
-    >
-      <v-card>
-        <v-toolbar dark color="primary">
-          <v-btn icon dark @click="dialog = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-          <v-toolbar-title>Detail View</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-toolbar-items>
-            <v-btn
-              dark
-              text
-              @click="$router.push({name: 'AdminEventEdit', params:{eventId: eventId}})"
-            >Edit</v-btn>
-          </v-toolbar-items>
-        </v-toolbar>
-        <event-detail :eventId="this.eventId" class="detail-view" />
-      </v-card>
-    </v-dialog>
   </div>
 </template>
 
 <script>
 import moment from "moment";
 import Loader from "../../components/Loader";
-import { getEventDetail } from "../../apis/event";
 import EventDetail from "../User/EventDetail";
+import PieChart from "../../components/PieChart";
+import { getEventDetail, deleteEvent } from "../../apis/event";
+import { eventBookingTypeStats } from "../../apis/stats";
 
 export default {
   name: "AdminEventDetail",
   props: ["eventId"],
-  components: { Loader, EventDetail },
+  components: { Loader, EventDetail, PieChart },
   data() {
     return {
       loading: true,
       event: null,
+      chartData: [["Registration Type", "Seats Count"]],
       dialog: false
     };
   },
@@ -167,10 +187,11 @@ export default {
     },
     percentTicketsSold() {
       if (!this.loading) {
-        return (
+        let avg =
           (this.event.number_of_seats - this.event.available_seats) /
-          this.event.number_of_seats
-        );
+          this.event.number_of_seats;
+        avg *= 100;
+        return Math.floor(avg);
       } else return 0;
     }
   },
@@ -180,8 +201,9 @@ export default {
   methods: {
     fetchEventDetail() {
       getEventDetail(this.eventId)
-        .then(response => {
+        .then(async response => {
           this.event = response.data;
+          await this.fetchStats();
         })
         .catch(error => {
           console.log(error);
@@ -190,8 +212,24 @@ export default {
           this.loading = false;
         });
     },
+    fetchStats() {
+      eventBookingTypeStats(this.eventId)
+        .then(response => {
+          let data = [...this.chartData];
+          response.data.map(obj => {
+            data.push([obj.registration_type, obj.type_count]);
+          });
+          this.chartData = data;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
     openDetail() {
       this.dialog = true;
+    },
+    handleDeleteEvent() {
+      deleteEvent(this.eventId).then(() => {});
     }
   }
 };
@@ -202,6 +240,7 @@ export default {
   width: 100%;
   overflow: hidden;
 }
+
 .publish-titlebar {
   display: flex;
   flex-direction: row;
@@ -256,6 +295,7 @@ export default {
 
 .card-title {
   font-size: 20px;
+  font-weight: 600;
 }
 
 .card-subtitle {
@@ -271,11 +311,6 @@ export default {
 .event-money {
   width: 100%;
   padding-left: 10px;
-}
-
-.twin-cards {
-  padding: 0px;
-  height: fit-content;
 }
 
 .event-stats {
@@ -305,6 +340,13 @@ export default {
   font-size: 24px;
   font-weight: 600;
   color: var(--v-primary-base);
+}
+
+.event-bookings {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
 }
 
 .detail-view {

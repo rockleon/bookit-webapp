@@ -31,3 +31,10 @@ export function patchEvent(id, payload) {
     data: payload,
   });
 }
+
+export function deleteEvent(id) {
+  return axios({
+    url: `events/${id}`,
+    method: "delete",
+  });
+}

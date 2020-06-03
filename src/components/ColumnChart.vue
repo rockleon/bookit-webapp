@@ -1,6 +1,6 @@
 <template>
   <div class="graph-container">
-    <GChart type="PieChart" :data="chartData" :options="chartOptions" />
+    <GChart type="ColumnChart" :data="chartData" :options="chartOptions" />
   </div>
 </template>
 
@@ -8,20 +8,17 @@
 import { GChart } from "vue-google-charts";
 
 export default {
-  name: "PieChart",
+  name: "ColumnChart",
   props: ["chartData"],
   components: { GChart },
   data() {
     return {
       chartOptions: {
-        // title: "Pie Chart",
-        is3D: true,
-        // pieHole: 0.4,
         backgroundColor: "transparent",
-        chartArea: {
-          height: "100%",
-          width: "100%"
-        }
+        // chartArea: {
+        //   height: "100%",
+        //   width: "100%"
+        // }
       }
     };
   }
