@@ -105,7 +105,7 @@ export default {
       pageLoading: true,
       loading: true,
       searchVal: null,
-      ordering: "start_time",
+      ordering: "-created",
       headers: [
         {
           text: "Name",
@@ -139,10 +139,6 @@ export default {
         }
       ],
       orderList: [
-        {
-          id: "start_time",
-          text: "Upcoming Events"
-        },
         {
           id: "-created",
           text: "Most Recently Added"

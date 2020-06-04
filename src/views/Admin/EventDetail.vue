@@ -119,6 +119,40 @@
         <div class="row-container" style="padding: 12px;">
           <v-card class="event-bookings card">
             <v-row class="card-title ma-0">Bookings made</v-row>
+            <v-row class="ma-0" style="padding-top: 20px;">
+              <v-data-table
+                :headers="headers"
+                :items="bookings"
+                :options.sync="options"
+                :server-items-length="totalItems"
+                :loading="tableLoading"
+                :footer-props="{ 'items-per-page-options': [5, 10, 15, 20] }"
+                class="elevation-1"
+                style="width: 100%"
+              >
+                <template v-slot:body="{ items }">
+                  <tbody>
+                    <tr v-if="!items.length && !loading && !tableLoading">
+                      <td class="table-message" colspan="5">No Results</td>
+                    </tr>
+                    <tr v-for="item in items" :key="item.id">
+                      <td
+                        class="td table-name"
+                        style="width: 28%;"
+                      >{{ getFullName(item.user_details) }}</td>
+                      <td class="td" style="width: 25%;">{{ formatDate(item.created) }}</td>
+                      <td class="td" style="width: 18%">{{item.registration_type}}</td>
+                      <td class="td" style="width: 14%;">{{ item.number_of_tickets }}</td>
+                      <td class="td" style="width: 15%;">{{ item.total_amount }}</td>
+                    </tr>
+                  </tbody>
+                </template>
+                <template v-slot:progress>
+                  <v-progress-linear color="primary" indeterminate></v-progress-linear>
+                  <div class="table-message">Loading...</div>
+                </template>
+              </v-data-table>
+            </v-row>
           </v-card>
         </div>
       </div>
@@ -157,6 +191,7 @@ import Loader from "../../components/Loader";
 import EventDetail from "../User/EventDetail";
 import PieChart from "../../components/PieChart";
 import { getEventDetail, deleteEvent } from "../../apis/event";
+import { getBookings } from "../../apis/booking";
 import { eventBookingTypeStats } from "../../apis/stats";
 
 export default {
@@ -166,9 +201,54 @@ export default {
   data() {
     return {
       loading: true,
+      dialog: false,
       event: null,
       chartData: [["Registration Type", "Seats Count"]],
-      dialog: false
+      bookings: [],
+      totalItems: 0,
+      tableLoading: false,
+      options: {
+        page: 1,
+        itemsPerPage: 10,
+        groupBy: [],
+        groupDesc: [],
+        sortBy: 1,
+        sortDesc: 1,
+        multiSort: false,
+        mustSort: false
+      },
+      headers: [
+        {
+          text: "Client Name",
+          align: "start",
+          sortable: false,
+          class: "table-header"
+        },
+        {
+          text: "Booking Date",
+          align: "start",
+          sortable: false,
+          class: "table-header"
+        },
+        {
+          text: "Type",
+          align: "start",
+          sortable: false,
+          class: "table-header"
+        },
+        {
+          text: "Tickets",
+          align: "start",
+          sortable: false,
+          class: "table-header"
+        },
+        {
+          text: "Price Paid",
+          align: "start",
+          sortable: false,
+          class: "table-header"
+        }
+      ]
     };
   },
   computed: {
@@ -195,6 +275,22 @@ export default {
       } else return 0;
     }
   },
+  watch: {
+    options: {
+      handler(oldVal, newVal) {
+        if (
+          oldVal.itemsPerPage !== newVal.itemsPerPage ||
+          oldVal.page !== newVal.page
+        ) {
+          this.fetchBookings();
+        }
+      },
+      deep: true
+    },
+    ordering: function() {
+      this.fetchEvents();
+    }
+  },
   mounted() {
     this.fetchEventDetail();
   },
@@ -203,6 +299,7 @@ export default {
       getEventDetail(this.eventId)
         .then(async response => {
           this.event = response.data;
+          await this.fetchBookings();
           await this.fetchStats();
         })
         .catch(error => {
@@ -210,6 +307,26 @@ export default {
         })
         .finally(() => {
           this.loading = false;
+        });
+    },
+    fetchBookings() {
+      this.tableLoading = true;
+      const { page, itemsPerPage } = this.options;
+      let params = {
+        event: this.eventId,
+        limit: itemsPerPage,
+        offset: itemsPerPage * (page - 1)
+      };
+      getBookings(params)
+        .then(response => {
+          this.bookings = response.data.results;
+          this.totalItems = response.data.count;
+        })
+        .catch(error => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.tableLoading = false;
         });
     },
     fetchStats() {
@@ -230,6 +347,20 @@ export default {
     },
     handleDeleteEvent() {
       deleteEvent(this.eventId).then(() => {});
+    },
+    getFullName(user_details) {
+      let name = "";
+      if (user_details.first_name && user_details.first_name.length)
+        name += `${user_details.first_name} `;
+      if (user_details.last_name && user_details.last_name.length)
+        name += user_details.last_name;
+      return name;
+    },
+    formatDate(dateTime) {
+      let date = moment(dateTime).format("DD/MM/YYYY");
+      if (date === moment().format("DD/MM/YYYY")) {
+        return `Today, ${moment(dateTime).format("hh:mm A")}`;
+      } else return moment(dateTime).format("DD MMMM YYYY, hh:mm A");
     }
   }
 };
@@ -347,6 +478,25 @@ export default {
   display: flex;
   flex-direction: column;
   padding: 20px;
+}
+
+.table-message {
+  text-align: center;
+  font-size: 16px;
+  padding: 10px;
+}
+
+.td {
+  font-size: 16px;
+}
+
+.table-name {
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.table-name:hover {
+  text-decoration: underline;
 }
 
 .detail-view {

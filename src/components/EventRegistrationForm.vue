@@ -75,7 +75,7 @@
       <v-col cols="12" class="form-col attachment-notes">
         Upload a verified Identification Card (Aadhar Card or Pan Card)
         <br />Submitted ID card will be verified at the event venue
-        <br />You can upload your ID card in the format of an image or a PDF
+        <br />You can upload your ID card in the format of an image (JPG, PNG or JPEG)
       </v-col>
     </v-row>
     <v-row class="form-row ma-0">
@@ -135,7 +135,6 @@ export default {
         "image/jpg",
         "image/jpeg",
         "image/png",
-        "application/pdf"
       ],
       registrationTypes: [
         { id: "Self", text: "Self" },
