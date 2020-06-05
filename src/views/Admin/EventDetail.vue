@@ -139,6 +139,7 @@
                       <td
                         class="td table-name"
                         style="width: 28%;"
+                        @click="showBookingDetail(item)"
                       >{{ getFullName(item.user_details) }}</td>
                       <td class="td" style="width: 25%;">{{ formatDate(item.created) }}</td>
                       <td class="td" style="width: 18%">{{item.registration_type}}</td>
@@ -181,6 +182,9 @@
           <event-detail :eventId="this.eventId" class="detail-view" />
         </v-card>
       </v-dialog>
+      <v-dialog v-model="dialog2" width="600">
+        <booking-detail :booking="activeBooking" />
+      </v-dialog>
     </div>
   </div>
 </template>
@@ -190,6 +194,7 @@ import moment from "moment";
 import Loader from "../../components/Loader";
 import EventDetail from "../User/EventDetail";
 import PieChart from "../../components/PieChart";
+import BookingDetail from "../../components/BookingDetail";
 import { getEventDetail, deleteEvent } from "../../apis/event";
 import { getBookings } from "../../apis/booking";
 import { eventBookingTypeStats } from "../../apis/stats";
@@ -197,16 +202,18 @@ import { eventBookingTypeStats } from "../../apis/stats";
 export default {
   name: "AdminEventDetail",
   props: ["eventId"],
-  components: { Loader, EventDetail, PieChart },
+  components: { Loader, EventDetail, PieChart, BookingDetail },
   data() {
     return {
       loading: true,
       dialog: false,
+      dialog2: false,
       event: null,
       chartData: [["Registration Type", "Seats Count"]],
       bookings: [],
       totalItems: 0,
       tableLoading: false,
+      activeBooking: null,
       options: {
         page: 1,
         itemsPerPage: 10,
@@ -347,6 +354,10 @@ export default {
     },
     handleDeleteEvent() {
       deleteEvent(this.eventId).then(() => {});
+    },
+    showBookingDetail(item) {
+      this.activeBooking = item;
+      this.dialog2 = true;
     },
     getFullName(user_details) {
       let name = "";

@@ -7,7 +7,7 @@
         <div class="image-div">
           <v-img
             :src="event.image_details.path"
-            alt="event.title"
+            :alt="event.title"
             height="400"
             class="event-image"
             contain
