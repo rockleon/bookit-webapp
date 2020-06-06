@@ -113,6 +113,7 @@
 import { postAttachment } from "../apis/attachment";
 import { postBooking } from "../apis/booking";
 import jsPDF from "jspdf";
+import moment from "moment"
 
 export default {
   name: "EventRegistrationForm",
@@ -196,8 +197,18 @@ export default {
                   var doc = new jsPDF("landscape");
                   doc.setFontSize(26);
                   doc.text(110, 20, "Event Pass");
-                  doc.addImage(img, "JPEG", 15, 30, 270, 100);
-                  doc.setFontSize(20);
+                  doc.addImage(img, "JPEG", 15, 30, 265, 90);
+                  doc.setFontSize(16);
+                  doc.text(
+                    15,
+                    135,
+                    "ID: " + this.booking.id
+                  );
+                  doc.text(
+                    150,
+                    135,
+                    "Registration Date: " + moment(this.booking.created).format("DD/MM/YYYY hh:mm A")
+                  );
                   doc.text(
                     15,
                     150,
@@ -226,6 +237,7 @@ export default {
                     "Seats Booked: " + this.booking.number_of_tickets
                   );
                   doc.text(15, 195, "Amount: " + this.booking.total_amount);
+                  doc.text(150, 195, "On: " + moment(this.booking.start_time).format("DD/MM/YYYY hh:mm A"));
                   doc.save("event_pass.pdf");
                 });
                 img.src = this.booking.event_details.image_details.image_url;
