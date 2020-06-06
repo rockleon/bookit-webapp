@@ -26,7 +26,6 @@
           item-value="id"
           item-text="text"
           hide-details
-          prepend-inner-icon="mdi-format-align-bottom"
         ></v-select>
       </v-col>
       <v-col cols="2" align-self="end" align="end" class="filter-cols" style="padding-left: 20px;">

@@ -2,50 +2,50 @@
   <v-card class="booking-detail">
     <v-row class="card-head ma-0">Booking Detail</v-row>
     <v-row class="card-content ma-0">
-      <v-row class="ma-0">
-        <v-col cols="6">
+      <v-row class="row-width-max ma-0">
+        <v-col cols="12">
           <v-row class="field-title ma-0">NAME</v-row>
           <v-row class="field-value ma-0">{{ getFullName(booking.user_details) }}</v-row>
         </v-col>
-        <v-col cols="6">
+        <v-col cols="12">
           <v-row class="field-title ma-0">MOBILE NO.</v-row>
           <v-row class="field-value ma-0">{{ booking.user_details.profile_details.mobile_number }}</v-row>
         </v-col>
       </v-row>
-      <v-row class="ma-0">
-        <v-col cols="6">
+      <v-row class="row-width-max ma-0">
+        <v-col cols="12">
           <v-row class="field-title ma-0">EMAIL</v-row>
           <v-row class="field-value ma-0">{{booking.user_details.email}}</v-row>
         </v-col>
-        <v-col cols="6">
+        <v-col cols="12">
           <v-row class="field-title ma-0">BOOKING DATE</v-row>
           <v-row class="field-value ma-0">{{ formatDate(booking.created) }}</v-row>
         </v-col>
       </v-row>
-      <v-row class="ma-0">
-        <v-col cols="6">
+      <v-row class="row-width-max ma-0">
+        <v-col cols="12">
           <v-row class="field-title ma-0">REGISTRATION TYPE</v-row>
           <v-row class="field-value ma-0">{{booking.registration_type}}</v-row>
         </v-col>
-        <v-col cols="6">
+        <v-col cols="12">
           <v-row class="field-title ma-0">TICKETS BOOKED</v-row>
           <v-row class="field-value ma-0">{{ booking.number_of_tickets }}</v-row>
         </v-col>
       </v-row>
-      <v-row class="ma-0">
-        <v-col cols="6">
+      <v-row class="row-width-max ma-0">
+        <v-col cols="12">
           <v-row class="field-title ma-0">PRICE PAID</v-row>
           <v-row class="field-value ma-0">{{booking.total_amount}}</v-row>
         </v-col>
-        <v-col cols="6"></v-col>
       </v-row>
-      <v-row class="ma-0">
+      <v-row class="row-width-max ma-0">
         <v-col cols="12">
           <v-row class="field-title ma-0">ID CARD</v-row>
           <v-row class="field-value ma-0">
             <v-img
               :src="booking.user_details.profile_details.id_card_details.image_url"
               alt="ID Card"
+              width
               contain
             ></v-img>
           </v-row>
@@ -87,6 +87,10 @@ export default {
 .booking-detail {
   display: flex;
   flex-direction: column;
+}
+
+.row-width-max {
+  width: 100%;
 }
 
 .card-head {
