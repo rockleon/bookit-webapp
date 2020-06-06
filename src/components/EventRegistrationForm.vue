@@ -237,7 +237,7 @@ export default {
                     "Seats Booked: " + this.booking.number_of_tickets
                   );
                   doc.text(15, 195, "Amount: " + this.booking.total_amount);
-                  doc.text(150, 195, "On: " + moment(this.booking.start_time).format("DD/MM/YYYY hh:mm A"));
+                  doc.text(150, 195, "On: " + moment(this.booking.event_details.start_time).format("DD/MM/YYYY hh:mm A"));
                   doc.save("event_pass.pdf");
                 });
                 img.src = this.booking.event_details.image_details.image_url;
