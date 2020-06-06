@@ -44,7 +44,7 @@
           <v-row class="field-title ma-0">ID CARD</v-row>
           <v-row class="field-value ma-0">
             <v-img
-              :src="booking.user_details.profile_details.id_card_details.path"
+              :src="booking.user_details.profile_details.id_card_details.image_url"
               alt="ID Card"
               contain
             ></v-img>

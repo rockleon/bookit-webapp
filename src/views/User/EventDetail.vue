@@ -6,7 +6,7 @@
       <div class="event-main-card card">
         <div class="image-div">
           <v-img
-            :src="event.image_details.path"
+            :src="event.image_details.image_url"
             :alt="event.title"
             height="400"
             class="event-image"

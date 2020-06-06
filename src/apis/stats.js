@@ -20,3 +20,10 @@ export function eventBookingTypeStats(id) {
     method: "get",
   });
 }
+
+export function eventOverallStats() {
+  return axios({
+    url: `dashboard-stats`,
+    method: "get",
+  });
+}

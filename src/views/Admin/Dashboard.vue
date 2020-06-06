@@ -43,7 +43,11 @@
 import Loader from "../../components/Loader";
 import PieChart from "../../components/PieChart";
 import ColumnChart from "../../components/ColumnChart";
-import { allBookingTypeStats, monthlyBookingStats } from "../../apis/stats";
+import {
+  allBookingTypeStats,
+  monthlyBookingStats,
+  eventOverallStats
+} from "../../apis/stats";
 
 export default {
   name: "Dashboard",
@@ -52,7 +56,7 @@ export default {
     return {
       loading: true,
       pieChartData: [["Registration Type", "Seats Count"]],
-      columnChartData: [["Month", "Seats Count"]],
+      columnChartData: [["Month", "Seats Count"]]
     };
   },
   created() {
@@ -68,6 +72,7 @@ export default {
           });
           this.pieChartData = data;
           await this.fetchColumnStats();
+          await this.fetchOverallStats();
         })
         .catch(error => {
           console.log(error);
@@ -78,6 +83,15 @@ export default {
     },
     fetchColumnStats() {
       monthlyBookingStats()
+        .then(response => {
+          console.log(response.data);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    },
+    fetchOverallStats() {
+      eventOverallStats()
         .then(response => {
           console.log(response.data);
         })

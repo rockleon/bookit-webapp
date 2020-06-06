@@ -4,7 +4,7 @@
     @click="$router.push({name: 'EventDetail', params: {eventId: event.id}})"
   >
     <div class="image-div">
-      <v-img :src="event.image_details.path" :alt="event.title" class="event-image" contain></v-img>
+      <v-img :src="event.image_details.image_url" :alt="event.title" class="event-image" contain></v-img>
     </div>
     <div class="event-content">
       <div class="event-info">

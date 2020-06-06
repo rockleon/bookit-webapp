@@ -112,7 +112,7 @@
 <script>
 import { postAttachment } from "../apis/attachment";
 import { postBooking } from "../apis/booking";
-import { jsPDF } from "jspdf";
+import jsPDF from "jspdf";
 
 export default {
   name: "EventRegistrationForm",
@@ -131,11 +131,7 @@ export default {
       submitLoading: false,
       valid: false,
       isFileValid: false,
-      fileValidTypes: [
-        "image/jpg",
-        "image/jpeg",
-        "image/png",
-      ],
+      fileValidTypes: ["image/jpg", "image/jpeg", "image/png"],
       registrationTypes: [
         { id: "Self", text: "Self" },
         { id: "Group", text: "Group" },
@@ -196,18 +192,43 @@ export default {
               .then(response2 => {
                 this.booking = response2.data;
                 var img = new Image();
-                img.addEventListener('load', function() {
-                    var doc = new jsPDF('landscape')
-                    doc.setFontSize(40)
-                    doc.text(110, 20, 'Event Pass')
-                    doc.addImage(img, 'JPEG', 15, 30, 270, 100)
-                    doc.setFontSize(30)
-                    doc.text(15, 150, 'Type: '+ this.booking.registration_type)
-                    doc.text(15, 170, 'No. of Tickets: '+ this.booking.number_of_tickets)
-                    doc.text(15, 190, 'Amount: ' + this.booking.total_amount)
-                    doc.save('event_pass.pdf')
+                img.addEventListener("load", () => {
+                  var doc = new jsPDF("landscape");
+                  doc.setFontSize(26);
+                  doc.text(110, 20, "Event Pass");
+                  doc.addImage(img, "JPEG", 15, 30, 270, 100);
+                  doc.setFontSize(20);
+                  doc.text(
+                    15,
+                    150,
+                    "Event: " + this.booking.event_details.title
+                  );
+                  doc.text(
+                    150,
+                    150,
+                    "City: " + this.booking.event_details.city
+                  );
+                  doc.text(
+                    15,
+                    165,
+                    "Name: " +
+                      `${this.booking.user_details.first_name} ${this.booking.user_details.last_name}`
+                  );
+                  doc.text(
+                    150,
+                    165,
+                    "Email: " + this.booking.user_details.email
+                  );
+                  doc.text(15, 180, "Type: " + this.booking.registration_type);
+                  doc.text(
+                    150,
+                    180,
+                    "Seats Booked: " + this.booking.number_of_tickets
+                  );
+                  doc.text(15, 195, "Amount: " + this.booking.total_amount);
+                  doc.save("event_pass.pdf");
                 });
-                img.src = this.booking.event_details.image_details.path;
+                img.src = this.booking.event_details.image_details.image_url;
               })
               .catch(error => {
                 console.log(error);

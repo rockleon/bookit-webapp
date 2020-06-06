@@ -37,7 +37,7 @@ export default new Vuex.Store({
 
       commit("setFullName", fullName);
       commit("setEmail", payload.email);
-      commit("setAvatar", payload.profile_details.id_card_details.path);
+      commit("setAvatar", payload.profile_details.id_card_details.image_url);
       commit("setIsLoggedIn", true);
     },
     deleteUserData({ commit }) {

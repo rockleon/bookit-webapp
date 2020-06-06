@@ -276,7 +276,7 @@
 </template>
 
 <script>
-import { VueEditor } from "vue2-editor";
+import { VueEditor, Quill } from "vue2-editor";
 import { Datetime } from "vue-datetime";
 import moment from "moment";
 import Loader from "../../components/Loader";
@@ -285,6 +285,16 @@ import { getTags } from "../../apis/tag";
 import { postAttachment } from "../../apis/attachment";
 import { postEvent, getEventDetail, patchEvent } from "../../apis/event";
 import "vue-datetime/dist/vue-datetime.css";
+
+var Link = Quill.import("formats/link");
+Link.sanitize = function(url) {
+  if (url.indexOf("http://") == 0 || url.indexOf("https://") == 0) {
+    return url;
+  } else {
+    let newUrl = "https://" + url;
+    return newUrl;
+  }
+};
 
 export default {
   name: "EventAddEdit",
@@ -393,7 +403,7 @@ export default {
           this.ageLimit = response.data.age_limit;
           this.terms = response.data.terms_and_conditions;
           this.image = response.data.image_details;
-          this.imageUrl = response.data.image_details.path;
+          this.imageUrl = response.data.image_details.image_url;
           this.imageId = response.data.image;
         })
         .catch(error => {
@@ -432,7 +442,7 @@ export default {
         data.append("path", this.image);
         postAttachment(data)
           .then(response => {
-            this.imageUrl = response.data.path;
+            this.imageUrl = response.data.image_url;
             this.imageId = response.data.id;
           })
           .catch(error => {

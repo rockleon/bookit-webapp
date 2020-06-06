@@ -303,7 +303,7 @@ export default {
   },
   methods: {
     fetchEventDetail() {
-      getEventDetail(this.eventId)
+      getEventDetail(this.eventId, { is_admin: true })
         .then(async response => {
           this.event = response.data;
           await this.fetchBookings();
