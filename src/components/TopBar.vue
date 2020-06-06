@@ -119,6 +119,9 @@ export default {
 }
 
 .card-row {
+  width: 100%;
+  display: flex;
+  justify-content: center;
   padding: 5px;
 }
 </style>

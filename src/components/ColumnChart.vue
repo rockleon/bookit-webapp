@@ -15,11 +15,17 @@ export default {
     return {
       chartOptions: {
         backgroundColor: "transparent",
+        height: 400,
+        width: 1000,
         chartArea: {
           // height: "100%",
-          width: "100%"
+          // width: "100%"
         },
-        vAxis: { textPosition: "in" }
+        vAxis: { textPosition: "in", title: "Number of bookings" },
+        hAxis: {
+          title: "Month"
+        },
+        legend: { position: "bottom", maxLines: 3 }
       }
     };
   }
