@@ -7,3 +7,10 @@ export function login(payload) {
     data: payload,
   });
 }
+
+export function me() {
+  return axios({
+    url: `users/me`,
+    method: "get",
+  });
+}
