@@ -15,10 +15,11 @@ export default {
     return {
       chartOptions: {
         backgroundColor: "transparent",
-        // chartArea: {
-        //   height: "100%",
-        //   width: "100%"
-        // }
+        chartArea: {
+          // height: "100%",
+          width: "100%"
+        },
+        vAxis: { textPosition: "in" }
       }
     };
   }

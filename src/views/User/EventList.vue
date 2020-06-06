@@ -116,13 +116,11 @@ export default {
         search: this.searchVal,
         ordering: this.ordering
       };
-      // if (this.filtertags.length) params["tags"] = this.filtertags;
       if (this.filtertags.length) {
         let taglist = this.filtertags.map(tag => {
           return tag;
         });
         taglist = JSON.stringify(taglist);
-        // taglist = taglist.replace("%22", '"');
         params["tags"] = taglist;
       }
 

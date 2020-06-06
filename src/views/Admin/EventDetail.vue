@@ -3,11 +3,12 @@
     <loader v-if="loading" />
     <div v-else>
       <div class="publish-titlebar">
-        <v-col cols="11" class="page-title">{{event.title}}</v-col>
-        <v-col cols="1" class="page-buttons-container">
+        <span cols="11" class="page-title">{{event.title}}</span>
+        <span cols="1" class="page-buttons-container">
           <v-menu offset-y>
             <template v-slot:activator="{ on }">
-              <v-icon v-on="on">mdi-dots-vertical</v-icon>
+              <!-- <v-icon v-on="on" color="black">mdi-menu</v-icon> -->
+              <v-icon v-on="on" color="black">mdi-dots-vertical</v-icon>
             </template>
             <v-list style="width: 125px">
               <v-list-item link @click="openDetail">
@@ -24,7 +25,7 @@
               </v-list-item>
             </v-list>
           </v-menu>
-        </v-col>
+        </span>
       </div>
       <div class="event-detail">
         <div class="row-container">
@@ -386,7 +387,7 @@ export default {
 .publish-titlebar {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   width: 100%;
   padding: 16.6px 30px;
   padding-left: 86px;
@@ -406,6 +407,7 @@ export default {
   justify-content: flex-end;
   padding: 0px;
   padding-right: 10px;
+  padding-left: 20px;
 }
 
 .list-title:hover {

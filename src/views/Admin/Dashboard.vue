@@ -9,15 +9,15 @@
               <v-row class="card-title ma-0">Event Overall Stats</v-row>
               <v-row class="card-stats ma-0">
                 <span class="stats-title">Total Events</span>
-                <span class="stats-value">12</span>
+                <span class="stats-value">{{ overallStats.total_event }}</span>
               </v-row>
               <v-row class="card-stats ma-0">
                 <span class="stats-title">Total Bookings Made</span>
-                <span class="stats-value">100</span>
+                <span class="stats-value">{{ overallStats.total_booking }}</span>
               </v-row>
               <v-row class="card-stats ma-0">
                 <span class="stats-title">Percentage of Bookings Made</span>
-                <span class="stats-value">75%</span>
+                <span class="stats-value">{{ overallStats.booking_percentage }}%</span>
               </v-row>
             </v-card>
           </v-col>
@@ -49,12 +49,29 @@ import {
   eventOverallStats
 } from "../../apis/stats";
 
+const monthName = [
+  "",
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "June",
+  "July",
+  "Aug",
+  "Sept",
+  "Oct",
+  "Nov",
+  "Dec"
+];
+
 export default {
   name: "Dashboard",
   components: { Loader, PieChart, ColumnChart },
   data() {
     return {
       loading: true,
+      overallStats: null,
       pieChartData: [["Registration Type", "Seats Count"]],
       columnChartData: [["Month", "Seats Count"]]
     };
@@ -85,6 +102,11 @@ export default {
       monthlyBookingStats()
         .then(response => {
           console.log(response.data);
+          let data = [...this.columnChartData];
+          response.data.map(obj => {
+            data.push([`${monthName[obj.month]} ${obj.year % 100}`, obj.count]);
+          });
+          this.columnChartData = data;
         })
         .catch(error => {
           console.log(error);
@@ -93,7 +115,7 @@ export default {
     fetchOverallStats() {
       eventOverallStats()
         .then(response => {
-          console.log(response.data);
+          this.overallStats = response.data;
         })
         .catch(error => {
           console.log(error);

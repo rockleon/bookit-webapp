@@ -14,11 +14,11 @@
         />
       </template>
       <v-list class="list">
-        <v-list-item v-if="!$route.meta.requiresAuth" class="list-item" @click="handlePublishEvent">
-          <span>Publish an Event</span>
-        </v-list-item>
         <v-list-item v-if="!$route.meta.requiresAuth" class="list-item" @click="dialog = true">
           <span>Login as Admin</span>
+        </v-list-item>
+        <v-list-item v-if="!$route.meta.requiresAuth" class="list-item" @click="handlePublishEvent">
+          <span>Publish an Event</span>
         </v-list-item>
         <!-- <v-list-item class="list-item">
           <span>View Dark Mode</span>
