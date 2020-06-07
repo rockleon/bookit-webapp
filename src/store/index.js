@@ -19,7 +19,7 @@ export default new Vuex.Store({
       state.fullName = data;
     },
     setEmail(state, data) {
-      state.roles = data;
+      state.email = data;
     },
     setAvatar(state, data) {
       state.avatar = data;

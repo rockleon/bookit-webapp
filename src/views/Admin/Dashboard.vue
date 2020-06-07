@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard">
     <loader v-if="loading" />
-    <div v-else>
+    <div v-else class="scrollable">
       <div class="row-container">
         <v-row class="ma-0">
           <v-col cols="6" style="padding-right: 50px;">
@@ -128,8 +128,15 @@ export default {
 <style scoped>
 .dashboard {
   width: 100%;
-  padding: 30px;
+  padding: 0px;
   padding-left: 86px;
+  overflow: hidden;
+}
+
+.scrollable{
+  height: 100%;
+  overflow-y: auto;
+  padding: 30px;
 }
 
 .row-container {

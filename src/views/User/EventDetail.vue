@@ -33,7 +33,7 @@
               block
               color="secondary"
               height="50"
-              @click="dialog = true"
+              @click="showBookingForm"
             >REGISTER</v-btn>
           </div>
         </div>
@@ -69,8 +69,45 @@
               <span class="text-important">{{getLastDate}}</span>
             </v-row>
           </div>
+          <div class="event-share card">
+            <v-row class="ma-0">Lost Your Pass?</v-row>
+            <v-row class="ma-0" style="padding-top: 5px">
+              <span
+                class="text-in-progress"
+              >Enter your registration Id to receive a copy of your event pass</span>
+            </v-row>
+            <v-form ref="lostForm" v-model="valid" @submit.prevent>
+              <v-row class="ma-0">
+                <v-col cols="9" style="padding-left: 0px">
+                  <v-text-field
+                    solo
+                    dense
+                    v-model="bookingId"
+                    placeholder="Registration Id"
+                    hide-details="auto"
+                    :rules="[rules.required, rules.invalidId]"
+                    @focus="isIdInvalid = false"
+                    @keypress.enter="handleLostRegistration"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="3" style="padding-right: 0px">
+                  <v-btn
+                    block
+                    color="secondary"
+                    :loading="submitLoading"
+                    :disabled="submitLoading"
+                    @click="handleLostRegistration"
+                  >GO</v-btn>
+                </v-col>
+              </v-row>
+            </v-form>
+          </div>
           <div class="event-map card">
             <span>Check location on map</span>
+            <v-row class="ma-0" style="padding-top: 10px;">
+              <span class="text-in-progress">Work in Progress</span>
+              <v-icon style="padding-left: 5px" size="20">mdi-progress-clock</v-icon>
+            </v-row>
           </div>
           <div class="event-share card">
             <v-row class="ma-0">Share this Event</v-row>
@@ -114,11 +151,23 @@
           <event-registration-form
             :eventId="eventId"
             :title="event.title"
+            :seatsAvailable="event.available_seats"
             @closeModal="dialog = false"
           />
         </v-card>
       </v-dialog>
       <!-- Event Registration Form Modal end -->
+
+      <!-- House Full Modal -->
+      <v-dialog v-model="dialog2" max-width="400">
+        <v-card class="full-modal">
+          <v-row class="card-head ma-0">All Tickets were Sold!</v-row>
+          <v-row class="card-row ma-0">
+            <img :src="require('@/assets/house_full.jpg')" alt="House Full" />
+          </v-row>
+        </v-card>
+      </v-dialog>
+      <!-- House Full Modal end -->
     </div>
   </div>
 </template>
@@ -128,6 +177,8 @@ import moment from "moment";
 import EventRegistrationForm from "../../components/EventRegistrationForm";
 import Loader from "../../components/Loader";
 import { getEventDetail } from "../../apis/event";
+import { getBookingDetail } from "../../apis/booking";
+import jsPDF from "jspdf";
 
 export default {
   name: "EventDetail",
@@ -137,7 +188,16 @@ export default {
     return {
       event: null,
       dialog: false,
-      loading: true
+      dialog2: false,
+      loading: true,
+      valid: true,
+      bookingId: null,
+      isIdInvalid: false,
+      submitLoading: false,
+      rules: {
+        required: value => !!value || "required",
+        invalidId: () => !this.isIdInvalid || "Invalid Id"
+      }
     };
   },
   mounted() {
@@ -148,7 +208,8 @@ export default {
       let date = moment(this.event.start_time).format("DD/MM/YYYY");
       if (date === moment().format("DD/MM/YYYY")) {
         return `Today, ${moment(this.event.start_time).format("hh:mm A")}`;
-      } else return moment(this.event.start_time).format("MM/DD, hh:mm A");
+      } else
+        return moment(this.event.start_time).format("DD MMMM YYYY, hh:mm A");
     },
     getLastDate() {
       let date = moment(this.event.start_time);
@@ -180,6 +241,70 @@ export default {
           else names += `${obj.title}, `;
         });
         return names;
+      }
+    },
+    showBookingForm() {
+      if (this.event.available_seats > 0) this.dialog = true;
+      else this.dialog2 = true;
+    },
+    async handleLostRegistration() {
+      this.submitLoading = true;
+      await this.$refs.lostForm.validate();
+      if (!this.valid) {
+        this.submitLoading = false;
+      } else {
+        getBookingDetail(this.bookingId.trim(), { event: this.eventId })
+          .then(response => {
+            var img = new Image();
+            img.addEventListener("load", () => {
+              var doc = new jsPDF("landscape");
+              doc.setFontSize(26);
+              doc.text(125, 20, "Event Pass");
+              doc.addImage(img, "JPEG", 15, 30, 265, 90);
+              doc.setFontSize(16);
+              doc.text(15, 135, "ID: " + response.data.id);
+              doc.text(
+                150,
+                135,
+                "Registration Date: " +
+                  moment(response.data.created).format("DD/MM/YYYY hh:mm A")
+              );
+              doc.text(15, 150, "Event: " + response.data.event_details.title);
+              doc.text(150, 150, "City: " + response.data.event_details.city);
+              doc.text(
+                15,
+                165,
+                "Name: " +
+                  `${response.data.user_details.first_name} ${response.data.user_details.last_name}`
+              );
+              doc.text(150, 165, "Email: " + response.data.user_details.email);
+              doc.text(15, 180, "Type: " + response.data.registration_type);
+              doc.text(
+                150,
+                180,
+                "Seats Booked: " + response.data.number_of_tickets
+              );
+              doc.text(15, 195, "Amount: " + response.data.total_amount);
+              doc.text(
+                150,
+                195,
+                "Event Date: " +
+                  moment(response.data.event_details.start_time).format(
+                    "DD/MM/YYYY hh:mm A"
+                  )
+              );
+              doc.save("event_pass.pdf");
+            });
+            img.src = response.data.event_details.image_details.image_url;
+          })
+          .catch(error => {
+            console.log(error);
+            this.isIdInvalid = true;
+            this.$refs.lostForm.validate();
+          })
+          .finally(() => {
+            this.submitLoading = false;
+          });
       }
     }
   }
@@ -317,6 +442,25 @@ export default {
   font-weight: 500;
 }
 
+.full-modal {
+  padding: 15px;
+}
+
+.card-head {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  font-size: 24px;
+  padding-bottom: 5px;
+}
+
+.card-row {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+}
+
 .text-area {
   white-space: pre-wrap;
   padding: 10px 0px;
@@ -325,5 +469,9 @@ export default {
 
 .text-important {
   color: var(--v-error-darken2);
+}
+
+.text-in-progress {
+  color: var(--v-text-lighten5);
 }
 </style>
