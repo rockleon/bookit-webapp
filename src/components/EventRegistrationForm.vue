@@ -64,7 +64,7 @@
           type="number"
           item-text="text"
           item-value="id"
-          :rules="[rules.required, rules.numbersOnly, rules.greaterThanOne ]"
+          :rules="[rules.required, rules.numbersOnly, rules.greaterThanOne, rules.availableSeats ]"
           validate-on-blur
           :disabled="disableTickets"
           class="pa-0"
@@ -116,7 +116,7 @@ import jsPDF from "jspdf";
 
 export default {
   name: "EventRegistrationForm",
-  props: ["eventId", "title"],
+  props: ["eventId", "title", "seatsAvailable"],
   data() {
     return {
       booking: null,
@@ -151,6 +151,9 @@ export default {
         greaterThanOne: value =>
           (value && (this.typeOfBooking === "Self" || value > 1)) ||
           "Value should be greater than 1",
+        availableSeats: value =>
+          (value && value <= this.seatsAvailable) ||
+          `Only ${this.seatsAvailable} tickets are available`,
         fileType: value =>
           (value && this.fileValidTypes.includes(value.type)) ||
           "Invalid file type"

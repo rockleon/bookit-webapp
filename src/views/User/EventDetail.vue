@@ -33,7 +33,7 @@
               block
               color="secondary"
               height="50"
-              @click="dialog = true"
+              @click="showBookingForm"
             >REGISTER</v-btn>
           </div>
         </div>
@@ -151,11 +151,23 @@
           <event-registration-form
             :eventId="eventId"
             :title="event.title"
+            :seatsAvailable="event.available_seats"
             @closeModal="dialog = false"
           />
         </v-card>
       </v-dialog>
       <!-- Event Registration Form Modal end -->
+
+      <!-- House Full Modal -->
+      <v-dialog v-model="dialog2" max-width="400">
+        <v-card class="full-modal">
+          <v-row class="card-head ma-0">All Tickets were Sold!</v-row>
+          <v-row class="card-row ma-0">
+            <img :src="require('@/assets/house_full.jpg')" alt="House Full" />
+          </v-row>
+        </v-card>
+      </v-dialog>
+      <!-- House Full Modal end -->
     </div>
   </div>
 </template>
@@ -175,6 +187,7 @@ export default {
     return {
       event: null,
       dialog: false,
+      dialog2: false,
       loading: true,
       valid: true,
       bookingId: null,
@@ -228,6 +241,10 @@ export default {
         });
         return names;
       }
+    },
+    showBookingForm() {
+      if (this.event.available_seats > 0) this.dialog = true;
+      else this.dialog2 = true;
     },
     async handleLostRegistration() {
       this.submitLoading = true;
@@ -381,6 +398,25 @@ export default {
   width: 100%;
   font-size: 20px;
   font-weight: 500;
+}
+
+.full-modal {
+  padding: 15px;
+}
+
+.card-head {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  font-size: 24px;
+  padding-bottom: 5px;
+}
+
+.card-row {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 5px;
 }
 
 .text-area {
