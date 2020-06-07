@@ -35,7 +35,7 @@ export default {
       return date;
     },
     getMonth() {
-      let month = moment(this.event.start_time).format("MMMM");
+      let month = moment(this.event.start_time).format("MMM");
       return month;
     }
   }
