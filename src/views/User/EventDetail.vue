@@ -69,8 +69,45 @@
               <span class="text-important">{{getLastDate}}</span>
             </v-row>
           </div>
+          <div class="event-share card">
+            <v-row class="ma-0">Lost Your Pass?</v-row>
+            <v-row class="ma-0" style="padding-top: 5px">
+              <span
+                class="text-in-progress"
+              >Enter your registration Id to receive a copy of your event pass</span>
+            </v-row>
+            <v-form ref="lostForm" v-model="valid" @submit.prevent>
+              <v-row class="ma-0">
+                <v-col cols="9" style="padding-left: 0px">
+                  <v-text-field
+                    solo
+                    dense
+                    v-model="bookingId"
+                    placeholder="Registration Id"
+                    hide-details="auto"
+                    :rules="[rules.required, rules.invalidId]"
+                    @focus="isIdInvalid = false"
+                    @keypress.enter="handleLostRegistration"
+                  ></v-text-field>
+                </v-col>
+                <v-col cols="3" style="padding-right: 0px">
+                  <v-btn
+                    block
+                    color="secondary"
+                    :loading="submitLoading"
+                    :disabled="submitLoading"
+                    @click="handleLostRegistration"
+                  >GO</v-btn>
+                </v-col>
+              </v-row>
+            </v-form>
+          </div>
           <div class="event-map card">
             <span>Check location on map</span>
+            <v-row class="ma-0" style="padding-top: 10px;">
+              <span class="text-in-progress">Work in Progress</span>
+              <v-icon style="padding-left: 5px" size="20">mdi-progress-clock</v-icon>
+            </v-row>
           </div>
           <div class="event-share card">
             <v-row class="ma-0">Share this Event</v-row>
@@ -128,6 +165,7 @@ import moment from "moment";
 import EventRegistrationForm from "../../components/EventRegistrationForm";
 import Loader from "../../components/Loader";
 import { getEventDetail } from "../../apis/event";
+import { getBookingDetail } from "../../apis/booking";
 
 export default {
   name: "EventDetail",
@@ -137,7 +175,15 @@ export default {
     return {
       event: null,
       dialog: false,
-      loading: true
+      loading: true,
+      valid: true,
+      bookingId: null,
+      isIdInvalid: false,
+      submitLoading: false,
+      rules: {
+        required: value => !!value || "required",
+        invalidId: () => !this.isIdInvalid || "Invalid Id"
+      }
     };
   },
   mounted() {
@@ -148,7 +194,8 @@ export default {
       let date = moment(this.event.start_time).format("DD/MM/YYYY");
       if (date === moment().format("DD/MM/YYYY")) {
         return `Today, ${moment(this.event.start_time).format("hh:mm A")}`;
-      } else return moment(this.event.start_time).format("MM/DD, hh:mm A");
+      } else
+        return moment(this.event.start_time).format("DD MMMM YYYY, hh:mm A");
     },
     getLastDate() {
       let date = moment(this.event.start_time);
@@ -180,6 +227,25 @@ export default {
           else names += `${obj.title}, `;
         });
         return names;
+      }
+    },
+    async handleLostRegistration() {
+      this.submitLoading = true;
+      await this.$refs.lostForm.validate();
+      if (!this.valid) {
+        this.submitLoading = false;
+      } else {
+        getBookingDetail(this.bookingId, { event: this.eventId })
+          .then(response => {
+            console.log(response.data);
+          })
+          .catch(error => {
+            console.log(error);
+            this.isIdInvalid = true;
+          })
+          .finally(() => {
+            this.submitLoading = false;
+          });
       }
     }
   }
@@ -325,5 +391,9 @@ export default {
 
 .text-important {
   color: var(--v-error-darken2);
+}
+
+.text-in-progress {
+  color: var(--v-text-lighten5);
 }
 </style>
