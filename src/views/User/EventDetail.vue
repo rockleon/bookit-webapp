@@ -69,7 +69,7 @@
               <span class="text-important">{{getLastDate}}</span>
             </v-row>
           </div>
-          <div class="event-share card">
+          <div v-if="$route.name === 'EventDetail'" class="event-share card">
             <v-row class="ma-0">Lost Your Pass?</v-row>
             <v-row class="ma-0" style="padding-top: 5px">
               <span
