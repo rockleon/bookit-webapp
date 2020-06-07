@@ -16,7 +16,11 @@
                 <span class="stats-value">{{ overallStats.total_booking }}</span>
               </v-row>
               <v-row class="card-stats ma-0">
-                <span class="stats-title">Percentage of Bookings Made</span>
+                <span class="stats-title">Total Tickets Sold</span>
+                <span class="stats-value">{{ overallStats.tickets_count }}</span>
+              </v-row>
+              <v-row class="card-stats ma-0">
+                <span class="stats-title">Percentage of Tickets Sold</span>
                 <span class="stats-value">{{ overallStats.booking_percentage }}%</span>
               </v-row>
             </v-card>
@@ -31,7 +35,7 @@
       </div>
       <div class="row-container" style="padding: 12px;">
         <v-card class="card">
-          <v-row class="card-title ma-0">Tickets Sold as per Registration Type</v-row>
+          <v-row class="card-title ma-0">Tickets Sold per Month</v-row>
           <column-chart :chartData="columnChartData" />
         </v-card>
       </div>
