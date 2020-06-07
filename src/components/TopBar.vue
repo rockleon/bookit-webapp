@@ -26,6 +26,9 @@
         <v-list-item class="list-item" @click="handleFeedback">
           <span>Give Feedback</span>
         </v-list-item>
+        <v-list-item v-if="$route.meta.requiresAuth" class="list-item" @click="handleLogout">
+          <span>Logout</span>
+        </v-list-item>
       </v-list>
     </v-menu>
     <!-- Settings Icon end -->
@@ -56,6 +59,7 @@
 
 <script>
 import LoginForm from "./LoginForm";
+import { mapActions } from "vuex";
 
 export default {
   name: "TopBar",
@@ -68,6 +72,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["deleteUserData"]),
     handlePublishEvent() {
       this.dialogText = "Contact us at...";
       this.dialog2 = true;
@@ -75,6 +80,11 @@ export default {
     handleFeedback() {
       this.dialogText = "Send feedback at...";
       this.dialog2 = true;
+    },
+    handleLogout() {
+      this.deleteUserData();
+      localStorage.removeItem("BOOKIT_TOKEN");
+      this.$router.replace({ name: "Events" });
     }
   }
 };

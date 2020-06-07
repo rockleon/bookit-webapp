@@ -64,7 +64,7 @@
           type="number"
           item-text="text"
           item-value="id"
-          :rules="[rules.required, rules.numbersOnly, rules.greaterThanOne ]"
+          :rules="[rules.required, rules.numbersOnly, rules.greaterThanOne, rules.availableSeats ]"
           validate-on-blur
           :disabled="disableTickets"
           class="pa-0"
@@ -117,7 +117,7 @@ import moment from "moment"
 
 export default {
   name: "EventRegistrationForm",
-  props: ["eventId", "title"],
+  props: ["eventId", "title", "seatsAvailable"],
   data() {
     return {
       booking: null,
@@ -152,6 +152,9 @@ export default {
         greaterThanOne: value =>
           (value && (this.typeOfBooking === "Self" || value > 1)) ||
           "Value should be greater than 1",
+        availableSeats: value =>
+          (value && value <= this.seatsAvailable) ||
+          `Only ${this.seatsAvailable} tickets are available`,
         fileType: value =>
           (value && this.fileValidTypes.includes(value.type)) ||
           "Invalid file type"
@@ -196,7 +199,7 @@ export default {
                 img.addEventListener("load", () => {
                   var doc = new jsPDF("landscape");
                   doc.setFontSize(26);
-                  doc.text(110, 20, "Event Pass");
+                  doc.text(125, 20, "Event Pass");
                   doc.addImage(img, "JPEG", 15, 30, 265, 90);
                   doc.setFontSize(16);
                   doc.text(
@@ -237,7 +240,7 @@ export default {
                     "Seats Booked: " + this.booking.number_of_tickets
                   );
                   doc.text(15, 195, "Amount: " + this.booking.total_amount);
-                  doc.text(150, 195, "On: " + moment(this.booking.event_details.start_time).format("DD/MM/YYYY hh:mm A"));
+                  doc.text(150, 195, "Event Date: " + moment(this.booking.event_details.start_time).format("DD/MM/YYYY hh:mm A"));
                   doc.save("event_pass.pdf");
                 });
                 img.src = this.booking.event_details.image_details.image_url;
