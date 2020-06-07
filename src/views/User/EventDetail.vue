@@ -178,6 +178,7 @@ import EventRegistrationForm from "../../components/EventRegistrationForm";
 import Loader from "../../components/Loader";
 import { getEventDetail } from "../../apis/event";
 import { getBookingDetail } from "../../apis/booking";
+import jsPDF from "jspdf";
 
 export default {
   name: "EventDetail",
@@ -252,13 +253,54 @@ export default {
       if (!this.valid) {
         this.submitLoading = false;
       } else {
-        getBookingDetail(this.bookingId, { event: this.eventId })
+        getBookingDetail(this.bookingId.trim(), { event: this.eventId })
           .then(response => {
-            console.log(response.data);
+            var img = new Image();
+            img.addEventListener("load", () => {
+              var doc = new jsPDF("landscape");
+              doc.setFontSize(26);
+              doc.text(125, 20, "Event Pass");
+              doc.addImage(img, "JPEG", 15, 30, 265, 90);
+              doc.setFontSize(16);
+              doc.text(15, 135, "ID: " + response.data.id);
+              doc.text(
+                150,
+                135,
+                "Registration Date: " +
+                  moment(response.data.created).format("DD/MM/YYYY hh:mm A")
+              );
+              doc.text(15, 150, "Event: " + response.data.event_details.title);
+              doc.text(150, 150, "City: " + response.data.event_details.city);
+              doc.text(
+                15,
+                165,
+                "Name: " +
+                  `${response.data.user_details.first_name} ${response.data.user_details.last_name}`
+              );
+              doc.text(150, 165, "Email: " + response.data.user_details.email);
+              doc.text(15, 180, "Type: " + response.data.registration_type);
+              doc.text(
+                150,
+                180,
+                "Seats Booked: " + response.data.number_of_tickets
+              );
+              doc.text(15, 195, "Amount: " + response.data.total_amount);
+              doc.text(
+                150,
+                195,
+                "Event Date: " +
+                  moment(response.data.event_details.start_time).format(
+                    "DD/MM/YYYY hh:mm A"
+                  )
+              );
+              doc.save("event_pass.pdf");
+            });
+            img.src = response.data.event_details.image_details.image_url;
           })
           .catch(error => {
             console.log(error);
             this.isIdInvalid = true;
+            this.$refs.lostForm.validate();
           })
           .finally(() => {
             this.submitLoading = false;
