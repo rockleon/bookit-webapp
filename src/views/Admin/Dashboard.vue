@@ -73,7 +73,7 @@ export default {
       loading: true,
       overallStats: null,
       pieChartData: [["Registration Type", "Seats Count"]],
-      columnChartData: [["Month", "Seats Count"]]
+      columnChartData: [["Month", "Seats Booked"]]
     };
   },
   created() {
